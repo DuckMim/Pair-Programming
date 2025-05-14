@@ -1,0 +1,321 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.universal_iconImage {
+    width: min(10vw, min(10vh, 60px));
+    height: min(10vw, min(10vh, 60px));
+    padding: min(1vw, min(1vh, 6px));
+}
+
+
+/* ---------- Index ---------- */
+
+.index_errorBox {
+    z-index: 10;
+    background-color: #73eaff;
+    width: 150px;
+    height: 100px;
+
+    position: absolute;
+    top: 10vh;
+    left: 50vw;
+    transform: translateX(-50%);
+
+    align-content: center;
+    text-align: center;
+    padding: 10px 10px 10px 10px;
+}
+
+.index_errorBoxButton {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    height: 20px;
+    width: 20px;
+    background: #458c99;
+    border: none;
+}
+
+
+/* ---------- Admin / Player ---------- */
+
+.admin_roomSettings,
+.admin_startGame {
+    text-align: center;
+}
+
+.admin_grid,
+.player_grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.admin_grid_item,
+.player_grid_item {
+    width: 150px;
+    height: 90px;
+    background-color: #aaaaaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin_startGameButton {
+    position: sticky;
+    margin-top: 25px;
+    bottom: 10vh;
+    left: 50vw;
+    transform: translateX(-50%);
+}
+
+.admin_gradeList {
+    display: none;
+}
+
+.admin_gradeList,
+.admin_setList {
+    display: none;
+}
+
+.player_chooseImageGrid {
+    display: none;
+    grid-template-columns: repeat(5, 80px);
+    gap: 25px 7px;
+}
+
+.player_chooseImageButton {
+    background: url(./Icons/icon_0.png);
+    background-size: 70px;
+    height: 70px;
+    width: 70px;
+}
+
+
+/* ---------- Spectator ---------- */
+
+.spectator_grid {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    gap: 25px 7px;
+    transform: translateX(25vw);
+}
+
+.spectator_grid_item {
+    width: 150px;
+    height: 90px;
+    background-color: #aaaaaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ---------- Battle_ChooseTasks ---------- */
+
+.chooseTasks_cardOfTask {
+    background-color: #458c99;
+    width: 100px;
+    height: 150px;
+}
+
+.chooseTasks_fullTask {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background-color: #9fe8f5;
+    width: 60%;
+    height: 80%;
+}
+
+.chooseTasks_fullTask_p_letter,
+.chooseTasks_fullTask_p_name {
+    margin: 2px 0;
+    padding: 0;
+    line-height: 1.3;
+}
+
+.chooseTasks_fullTask_p_condition {
+    overflow: auto;
+}
+
+.chooseTasks_playerStats,
+.chooseTasks_enemyStats {
+    position: fixed;
+    width: auto;
+    background: #333;
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.chooseTasks_playerStats {
+    bottom: 0;
+    left: 0;
+}
+
+.chooseTasks_enemyStats {
+    top: 0;
+    right: 0;
+}
+
+
+/* ---------- Battle_DoTasks ---------- */
+
+.programming_wrapper {
+    background: #fbfbfb;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    grid-template-rows: 0.15fr 0.08fr 1fr 0.3fr;
+    gap: 10px 7px;
+}
+
+.programming_topBar {
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    width: 100%;
+    height: 100%;
+    background: #333;
+    color: white;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    top: 0;
+    left: 0;
+}
+
+.programming_playerStats,
+.programming_enemyStats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.programming_timer {
+    padding: 30px;
+}
+
+.programming_editorField {
+    background: #c9c9c9;
+    grid-row-start: 2;
+    grid-row-end: 4;
+
+    grid-column-start: 2;
+    grid-column-start: 2;
+
+    width: 100%;
+    height: 100%;
+
+    right: 15px;
+    top: 84px;
+}
+
+.programming_editor {
+    width: calc(100% - 6px - 10px);
+    height: calc(100% - 25px - 6px - 10px - 17px);
+    border: 5px solid #5b5b5b;
+    padding: 3px;
+    overflow: auto;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+.programming_submitButton {
+    margin: 9px 15px 9px 9px;
+}
+
+.programming_tasksButtons {
+    width: 100%;
+    height: 100%;
+    background: #dfdfdf;
+}
+
+.programming_result {
+    grid-row-start: 4;
+    grid-row-end: 4;
+
+    grid-column-start: 2;
+    grid-column-start: 2;
+
+    align-items: center;
+    align-content: center;
+
+    overflow: auto;
+    overflow-wrap: anywhere;
+}
+
+.programming_tasksField {
+    grid-row-start: 3;
+    grid-row-end: 5;
+
+    padding: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    background: #dfdfdf;
+    line-height: 1;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+
+.programming_limits {
+    display: inline-block; 
+    background: #c9c9c9;
+    border-radius: 10px;
+    padding: 10px;
+    margin: -6px;
+    width: auto;
+}
+
+.programming_examples {
+    background: #c9c9c9;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    overflow: auto;
+}
+
+
+/* ---------- Result ---------- */
+
+.result_players {
+    grid-column-start: 1;
+    grid-column-end: 3;
+
+    width: 100%;
+    height: 100%;
+    background: #333;
+    color: white;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    top: 0;
+    left: 0;
+}
+
+.result_playerStats,
+.result_enemyStats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 100px;
+}

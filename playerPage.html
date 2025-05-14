@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Knockout </title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="player_chooseImage">
+        <button class="player_chooseImageButton" type="button" id="chooseImageButton" onclick="SkinMenu()">
+            <br>
+    </div>
+
+    <div class="player_grid" id="playersGrid">
+        <!--
+        <div class="admin_grid_item"> Duck </div> -->
+    </div>
+
+    <div class="player_chooseImageGrid" id="chooseImageGrid">
+        <button class="player_chooseImageButton_item" type="button" onclick="ChooseSkin(0)">
+            <img src="./Icons/icon_0.png" class="universal_iconImage"> </button>
+        <button class="player_chooseImageButton_item" type="button" onclick="ChooseSkin(1)">
+            <img src="./Icons/icon_1.png" class="universal_iconImage"> </button>
+    </div>
+
+    <script src="JSCode/universalJS.js"></script>
+    <script src="JSCode/JSCode_playerPage.js"></script>
+</body>
+
+</html>
