@@ -13,7 +13,7 @@ Loop();
 async function Loop() {
     while (true) {
         await SomeAsyncFunction();
-        await Delay(100);
+        await Delay(1000);
     }
 }
 
@@ -22,39 +22,43 @@ function Delay(ms) {
 }
 
 async function SomeAsyncFunction() {
-    let payload = await LoadData();
+    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
-    if (payload.roomsCodes.length < 1) window.location.href = "index.html";
+    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
+    if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
+    if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
-    if (payload.rooms[ROOM_CODE].isActive)
+    let roomInfo = roomInfoPost.roomInfo;
+
+    if (roomInfo.isStartedGame)
     {
-        await sessionStorage.setItem("gradeNum", payload.rooms[ROOM_CODE].grade);
-        await sessionStorage.setItem("setOfTasks", payload.rooms[ROOM_CODE].numberOfTasksSet);
-        await sessionStorage.setItem("playerIndex", THIS_PLAYER_INDEX);
+        await sessionStorage.setItem("gradeNum", roomInfo.grade);
+        await sessionStorage.setItem("setOfTasks", roomInfo.taskSet);
+        await sessionStorage.setItem("playerIndex", parseInt(THIS_PLAYER_INDEX));
+        await sessionStorage.setItem("enemyIndex", allPlayers.players[THIS_PLAYER_INDEX].enemy);
 
         window.location.href = "chooseTasksPage.html";
     }
 
     for (let i = 0; i < divToPlayer.length; i++)
-        UpdatePlayerSkin(payload, i);
+        UpdatePlayerSkin(allPlayers.players, i);
 
-    while (payload.rooms[ROOM_CODE].players.length > currentRoomPlayers) {
-        NewPlayerIcon(payload, currentRoomPlayers);
+    while (allPlayers.players.length > currentRoomPlayers) {
+        NewPlayerIcon(allPlayers.players, currentRoomPlayers);
         currentRoomPlayers++;
     }
-
-    console.log(THIS_PLAYER_INDEX);
 }
 
 function UpdatePlayerSkin(payload, playerIndex) {
     let playerDiv = divToPlayer[playerIndex];
 
-    let playerSkin = payload.rooms[ROOM_CODE].players[playerIndex].skin;
-    let playerName = payload.rooms[ROOM_CODE].players[playerIndex].name;
+    let playerSkin = payload[playerIndex].icon;
+    let playerName = payload[playerIndex].name;
 
     let imgInsideDiv = playerDiv.querySelector("img");
     let pInsideDiv = playerDiv.querySelector("p");
-    imgInsideDiv.src = `./Icons/icon_${playerSkin}.png`;
+    imgInsideDiv.src = ICONS_LIST[playerSkin];
     if (playerIndex == THIS_PLAYER_INDEX)
         pInsideDiv.textContent = playerName + " (Ти)";
     else
@@ -63,17 +67,18 @@ function UpdatePlayerSkin(payload, playerIndex) {
 
 function NewPlayerIcon(payload, playerIndex) {
     let playerBox = document.createElement("div");
-    playerBox.setAttribute('class', 'player_grid_item');
+    playerBox.setAttribute('class', 'classField_1 admin_player_playerIcon');
 
     let playerBoxSkinImage = document.createElement("img");
-    playerBoxSkinImage.src = "./Icons/icon_0.png";
+    playerBoxSkinImage.src = ICONS_LIST[0];
     playerBoxSkinImage.setAttribute('class', 'universal_iconImage');
 
     let playerBoxName = document.createElement("p");
     if (playerIndex == THIS_PLAYER_INDEX)
-        playerBoxName.textContent = payload.rooms[ROOM_CODE].players[playerIndex].name + " (Ти)";
+        playerBoxName.textContent = payload[playerIndex].name + " (Ти)";
     else
-        playerBoxName.textContent = payload.rooms[ROOM_CODE].players[playerIndex].name;
+        playerBoxName.textContent = payload[playerIndex].name;
+    playerBoxName.setAttribute('class', 'admin_player_playerIcon_name');
 
     playerBox.appendChild(playerBoxSkinImage);
     playerBox.appendChild(playerBoxName);
@@ -84,16 +89,14 @@ function NewPlayerIcon(payload, playerIndex) {
 }
 
 function SkinMenu() {
-    if (CHOOSE_IMAGE_GRID.style.display === "none")
-        CHOOSE_IMAGE_GRID.style.display = "grid";
-    else
-        CHOOSE_IMAGE_GRID.style.display = "none";
+    if (!CHOOSE_IMAGE_GRID.classList.contains("show")) {
+        CHOOSE_IMAGE_GRID.classList.add("show");
+    } else {
+        CHOOSE_IMAGE_GRID.classList.remove("show");
+    }
 }
 
 async function ChooseSkin(skinIndex) {
-    let payload = await LoadData();
-
-    payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].skin = skinIndex;
-
-    await SaveData(payload);
+    let ans = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX), newIcon: parseInt(skinIndex), code: "0000" });
+    if (ans.status != 200) PopUpWindow(ans.description);
 }

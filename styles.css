@@ -1,6 +1,178 @@
+/*#region Universal setting */
+:root {
+    --color_background: 244, 244, 247;
+    --color_class_1: 220, 226, 240;
+    --color_class_2: 187, 205, 229;
+    --color_text_main: 34, 34, 34;
+    --color_text_additive: 97, 97, 97;
+
+    --color_button_main: 161, 183, 227;
+    --color_button_hover: 181, 201, 235;
+    --color_button_inactive: 216, 228, 246;
+
+    --color_input_main: 209, 213, 219;
+    --color_input_hover: 167, 179, 199;
+    --color_input_inactive: 224, 229, 240;
+
+    --color_code_error: 230, 57, 70; 
+    --color_code_correct: 46, 204, 113;
+    --color_code_variable_type: 0, 123, 255;
+    --color_code_variable_string: 76, 175, 80;
+    --color_code_variable_library: 255, 165, 0;
+    --color_code_variable_key_words: 138, 43, 226;
+}
+
+[data-theme="dark"] {
+    --color_background: 30, 30, 46;
+    --color_class_1: 46, 46, 62;
+    --color_class_2: 58, 61, 95;
+    --color_text_main: 234, 234, 234;
+    --color_text_additive: 161, 161, 161;
+
+    --color_button_main: 59, 130, 246;
+    --color_button_hover: 96, 165, 250;
+    --color_button_inactive: 107, 114, 128;
+
+    --color_input_main: 66, 68, 90;
+    --color_input_hover: 90, 96, 117;
+    --color_input_inactive: 107, 114, 128;
+
+    --color_code_error: 248, 113, 113;
+    --color_code_correct: 16, 185, 129;
+    --color_code_variable_type: 96, 165, 250;
+    --color_code_variable_string: 167, 243, 208;
+    --color_code_variable_library: 249, 115, 22;
+    --color_code_variable_key_words: 192, 132, 252;
+}
+
+* {
+    font-family: 'JetBrains Mono', monospace;
+}
+
 body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
+    background-color: rgb(var(--color_background));
+    color: rgb(var(--color_text_main));
+}
+
+canvas {
+    top: 0px;
+
+    display: block;
+    position: absolute;
+    z-index: -1;
+}
+
+.themeField {
+    position: absolute;
+}
+
+.classField_1 {
+    background-color: rgba(var(--color_class_1), 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 35px;
+
+    padding: 10px;
+}
+
+.classField_2 {
+    background-color: rgb(var(--color_class_2));
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+
+    padding: 15px;
+}
+
+input {
+    background-color: rgb(var(--color_input_main));
+    border-radius: 15px;
+    border-color: #00000000;
+
+    align-items: center;
+    text-align: center;
+
+    margin: 3px;
+    padding: 4px;
+
+    color: rgb(var(--color_text_main));
+
+    transition: background-color 1s;
+}
+
+input:focus {
+    background-color: rgb(var(--color_input_hover));
+    outline: none;
+
+    transition: background-color 0.4s;
+}
+
+.inputField_disable {
+    background-color: rgb(var(--color_input_inactive));
+    border-radius: 15px;
+    border-color: #00000000;
+
+    align-items: center;
+    text-align: center;
+
+    margin: 3px;
+    padding: 3px;
+
+    color: rgb(var(--color_text_main));
+
+    transition: background-color 1s;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+button {
+    background-color: rgb(var(--color_button_main));
+    border-radius: 15px;
+    border-color: #00000000;
+
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+
+    margin: 3px;
+    padding: 8px;
+
+    color: rgb(var(--color_text_main));
+
+    transform: scale(1, 1);
+
+    transition: background-color 0.4s, transform 0.4s;
+}
+
+button:hover {
+
+    background-color: rgb(var(--color_button_hover));
+    outline: none;
+
+    transform: scale(1.15, 1.15);
+}
+
+.button_disable {
+    background-color: rgb(var(--color_button_inactive));
+    border-radius: 15px;
+    border-color: #00000000;
+
+    align-items: center;
+    text-align: center;
+
+    margin: 3px;
+    padding: 3px;
+
+    color: rgb(var(--color_text_main));
+
+    transition: background-color 1s;
 }
 
 .universal_iconImage {
@@ -9,175 +181,420 @@ body {
     padding: min(1vw, min(1vh, 6px));
 }
 
-
-/* ---------- Index ---------- */
-
-.index_errorBox {
+.popUpBox {
     z-index: 10;
-    background-color: #73eaff;
-    width: 150px;
-    height: 100px;
 
-    position: absolute;
-    top: 10vh;
+    background-color: rgb(var(--color_class_2));
+
+    color: rgb(var(--color_text_main));
+
+    width: 35vw;
+    height: 50vh;
+
+    position: fixed;
+    top: 50vh;
     left: 50vw;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
 
+    align-items: center;
     align-content: center;
     text-align: center;
-    padding: 10px 10px 10px 10px;
+
+    padding: 10px;
+
+    backdrop-filter: blur(0px);
 }
 
-.index_errorBoxButton {
+.popUpBoxIcon {
+    width: min(35vw, 35vh);
+    height: auto;
+    padding: 10px;
+}
+
+.popUpBoxButton {
     position: absolute;
     top: 1%;
     right: 1%;
-    height: 20px;
-    width: 20px;
-    background: #458c99;
-    border: none;
+    height: 25px;
+    width: 30px;
+
+    padding: 0px;
+
+    color: rgb(var(--color_text_main));
 }
 
+.hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
 
-/* ---------- Admin / Player ---------- */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
 
-.admin_roomSettings,
-.admin_startGame {
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--color_button_inactive));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color_button_main));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color_button_hover))
+}
+
+/*#endregion */
+
+/*#region Index */
+
+.index_classField {
+    width: max(35vw, 300px);
+
+    align-items: center;
     text-align: center;
+
+    margin: 15px;
+
+    transform: translateX(calc(50vw - 50% - 15px));
 }
 
-.admin_grid,
-.player_grid {
+/*#endregion */
+
+/*#region Admin */
+
+.admin_organizer {
+    height: calc(100vh - 20px);
+    width: calc(100% - 0px);
+
+    display: grid;
+    grid-template-columns: 2fr 7fr;
+    grid-template-rows: 1fr 7fr;
+    gap: 35px;
+    row-gap: 35px 0px;
+}
+
+.admin_roomSettings {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    border-radius: 0px;
+
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+.admin_listButtons {
+    margin-left: 25px;
+}
+
+.admin_player_roomInfo {
+    position: relative;
+
+    align-self: center;
+    width: calc(100% - 20px - 17.5px - 35px - 10px);
+    height: auto;
+
+    text-align: center;
+    align-content: center;
+}
+
+.admin_player_grid {
+    width: 100%;
+    height: 100%;
+
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-}
+    align-items: stretch;
 
-.admin_grid_item,
-.player_grid_item {
-    width: 150px;
-    height: 90px;
-    background-color: #aaaaaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.admin_startGameButton {
-    position: sticky;
-    margin-top: 25px;
-    bottom: 10vh;
-    left: 50vw;
-    transform: translateX(-50%);
-}
-
-.admin_gradeList {
-    display: none;
-}
-
-.admin_gradeList,
-.admin_setList {
-    display: none;
-}
-
-.player_chooseImageGrid {
-    display: none;
-    grid-template-columns: repeat(5, 80px);
-    gap: 25px 7px;
-}
-
-.player_chooseImageButton {
-    background: url(./Icons/icon_0.png);
-    background-size: 70px;
-    height: 70px;
-    width: 70px;
-}
-
-
-/* ---------- Spectator ---------- */
-
-.spectator_grid {
-    display: grid;
-    grid-template-columns: 150px 150px;
-    gap: 25px 7px;
-    transform: translateX(25vw);
-}
-
-.spectator_grid_item {
-    width: 150px;
-    height: 90px;
-    background-color: #aaaaaa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-/* ---------- Battle_ChooseTasks ---------- */
-
-.chooseTasks_cardOfTask {
-    background-color: #458c99;
-    width: 100px;
-    height: 150px;
-}
-
-.chooseTasks_fullTask {
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
-    background-color: #9fe8f5;
-    width: 60%;
-    height: 80%;
-}
-
-.chooseTasks_fullTask_p_letter,
-.chooseTasks_fullTask_p_name {
-    margin: 2px 0;
-    padding: 0;
-    line-height: 1.3;
-}
-
-.chooseTasks_fullTask_p_condition {
     overflow: auto;
 }
 
-.chooseTasks_playerStats,
-.chooseTasks_enemyStats {
-    position: fixed;
-    width: auto;
-    background: #333;
-    color: white;
-    padding: 10px;
+.admin_player_playerIcon {
+    width: max(100px, 20%);
+    height: max(150px, 20%);
+
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+
+    margin: 5px;
 }
 
-.chooseTasks_playerStats {
-    bottom: 0;
-    left: 0;
+.admin_player_playerIcon_name {
+    word-break: break-all;
+    text-align: center;
 }
 
-.chooseTasks_enemyStats {
-    top: 0;
-    right: 0;
+.player_organizer {
+    height: calc(100vh - 20px);
+    width: calc(100% - 0px);
+
+    display: grid;
+    grid-template-rows: 1fr 7fr;
+    gap: 35px;
 }
 
+.player_changeSkin {
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.4s, height 0.4s;
+    pointer-events: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-y: auto;
+    width: 25%;
+    top: 0px;
+    left: 15px;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+}
 
-/* ---------- Battle_DoTasks ---------- */
+.player_changeSkin.show {
+    opacity: 1;
+    height: 100%;
+    pointer-events: auto;
+}
+
+#gradeList {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s, height 0.4s;
+    pointer-events: none;
+}
+
+#gradeList.show {
+    opacity: 1;
+    height: 180px;
+    pointer-events: auto;
+}
+
+.admin_setList {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s, height 0.4s;
+    pointer-events: none;
+    position: static; /* Важливо! */
+}
+
+.admin_setList.show {
+    opacity: 1;
+    height: 250px;
+    pointer-events: auto;
+    overflow-y: auto;
+    position: relative; /* Важливо! */
+}
+/*#endregion */
+
+/*#region Spectator */
+
+.spectator_organizer {
+    height: calc(100vh - 20px);
+    width: calc(100% - 0px);
+
+    display: grid;
+    grid-template-rows: 1fr 7fr;
+    gap: 35px;
+    row-gap: 35px 0px;
+}
+
+.spectator_time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    width: min(300px, calc(50%-4px));
+}
+
+.spectator_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 7px;
+}
+
+.spectator_playerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    width: min(300px, calc(50%-4px));
+
+    margin: 2px;
+}
+
+.spectator_playerIcon_name {
+    word-break: break-all;
+    text-align: center;
+    margin: 0px;
+}
+
+.spectator_playerIcon_info {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    height: min(300px, 50%);
+
+    margin: 10px;
+}
+
+.spectator_progressCircle {
+    width: 150px;
+    height: 150px;
+
+    background: conic-gradient(var(--progress-color) var(--percentage), rgb(var(--color_class_2)) 1%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: rgb(var(--color_text_main));
+
+    margin: 2px;
+}
+
+.spectator_progressCircle::before {
+    content: '';
+    position: absolute;
+    width: min(70%, calc(70% * (var(--ratio, 1))));
+    aspect-ratio: 1 / 1;
+    background: rgb(var(--color_class_1));
+    border-radius: 50%;
+}
+
+.spectator_progressCircle_text {
+    z-index: 1;
+}
+
+/*#endregion */
+
+/*#region Choose Tasks */
+
+.chooseTasks_organizer {
+    height: calc(100vh - 20px);
+    width: calc(100% - 0px);
+
+    display: grid;
+    grid-template-rows: 1fr 7fr;
+    gap: 35px;
+}
+
+.chooseTasks_profileOrganizer {
+    height: 100%;
+    width: calc(100% - 20px);
+
+    justify-content: center;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+}
+
+.chooseTasks_playerCell {
+    position: relative;
+
+    display: table;
+    margin: 0 auto;
+    
+    text-align: center;
+    width: 75%;
+    height: min(166px, 100%);
+}
+
+.chooseTasks_gear_1 {
+    width: 30px;
+    animation: rotateGear_1 1.25s ease-in-out infinite ;
+}
+
+@keyframes rotateGear_1{
+    0% {transform: rotate(0deg); }
+    100% {transform: rotate(360deg); }
+}
+
+.chooseTasks_gear_2 {
+    width: 20px;
+    margin-left: -14px;
+    animation: rotateGear_2 1.25s ease-in-out infinite ;
+}
+
+@keyframes rotateGear_2{
+    0% {transform: rotate(0deg); }
+    100% {transform: rotate(-360deg); }
+}
+
+.chooseTasks_cardOfTask {
+    width: max(100px, 20%);
+    height: max(100px, 20%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    margin: 10px;
+}
+
+.chooseTasks_listOfCards {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+
+    overflow: auto;
+}
+
+.chooseTasks_fullTask {
+    z-index: 10;
+
+    background-color: rgba(var(--color_class_2), 0.99);
+
+    width: 35vw;
+    height: 50vh;
+
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+
+    align-content: center;
+    text-align: center;
+
+    padding: 10px;
+
+    backdrop-filter: blur(0px);
+}
+
+/*#endregion */
+
+/*#region Programming */
 
 .programming_wrapper {
-    background: #fbfbfb;
     height: 100vh;
     display: grid;
     grid-template-columns: 6fr 5fr;
-    grid-template-rows: 0.15fr 0.08fr 1fr 0.3fr;
+    grid-template-rows: 0.15fr 0.08fr 1fr 0.2fr 0.3fr;
     gap: 10px 7px;
 }
 
@@ -187,8 +604,6 @@ body {
 
     width: 100%;
     height: 100%;
-    background: #333;
-    color: white;
     display: flex;
 
     align-items: center;
@@ -197,6 +612,7 @@ body {
 
     top: 0;
     left: 0;
+    padding: 0;
 }
 
 .programming_playerStats,
@@ -205,6 +621,9 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+
+    word-break: break-all;
+    text-align: center;
 }
 
 .programming_timer {
@@ -212,7 +631,6 @@ body {
 }
 
 .programming_editorField {
-    background: #c9c9c9;
     grid-row-start: 2;
     grid-row-end: 4;
 
@@ -224,16 +642,19 @@ body {
 
     right: 15px;
     top: 84px;
+
+    padding: 0;
+    padding-left: 10px;
+    padding-left: 10px;
 }
 
 .programming_editor {
-    width: calc(100% - 6px - 10px);
-    height: calc(100% - 25px - 6px - 10px - 17px);
-    border: 5px solid #5b5b5b;
-    padding: 3px;
+    width: 90%;
+    height: 70%;
     overflow: auto;
     white-space: pre;
     word-wrap: normal;
+    font-size: 14px;
 }
 
 .programming_submitButton {
@@ -243,12 +664,14 @@ body {
 .programming_tasksButtons {
     width: 100%;
     height: 100%;
-    background: #dfdfdf;
+    padding: 0;
+    padding-left: 15px;
+    box-sizing: border-box;
 }
 
 .programming_result {
     grid-row-start: 4;
-    grid-row-end: 4;
+    grid-row-end: 6;
 
     grid-column-start: 2;
     grid-column-start: 2;
@@ -258,24 +681,27 @@ body {
 
     overflow: auto;
     overflow-wrap: anywhere;
+
+    padding: 5;
 }
 
 .programming_tasksField {
     grid-row-start: 3;
-    grid-row-end: 5;
+    grid-row-end: 6;
 
-    padding: 10px;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    background: #dfdfdf;
+    padding: 5px;
+    width: calc(100%-50px);
+    height: 100%;
     line-height: 1;
     overflow-y: auto;
     overflow-wrap: anywhere;
+
+    padding: 0;
+    padding-left: 15px;
 }
 
 .programming_limits {
-    display: inline-block; 
-    background: #c9c9c9;
+    display: inline-block;
     border-radius: 10px;
     padding: 10px;
     margin: -6px;
@@ -283,25 +709,46 @@ body {
 }
 
 .programming_examples {
-    background: #c9c9c9;
     padding: 15px;
     margin: 10px;
     border-radius: 10px;
     overflow: auto;
 }
 
+.programming_playerStats,
+.programming_enemyStats {
+    min-width: 220px;
+    min-height: 60px;
+}
 
-/* ---------- Result ---------- */
+.programming_tasksField {
+    min-width: 350px;
+}
+
+.programming_editorField {
+    min-height: 250px;
+    min-width: 350px;
+}
+
+.programming_result {
+    min-height: 60px;
+    min-width: 120px;
+}
+
+.programming_editor {
+    min-height: 120px;
+    min-width: 200px;
+}
+
+/*#endregion */
+
+/*#region Result */
 
 .result_players {
-    grid-column-start: 1;
-    grid-column-end: 3;
-
     width: 100%;
     height: 100%;
-    background: #333;
-    color: white;
     display: flex;
+    position: absolute;
 
     align-items: center;
     justify-content: center;
@@ -313,9 +760,58 @@ body {
 
 .result_playerStats,
 .result_enemyStats {
+    width: 50%;
+    height: 50%;
+
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     margin: 100px;
 }
+
+/*#endregion */
+
+/* Color palette
+Темна тема
+    Фон: #1E1E2E
+    Фон класів: #2E2E3E, #3A3D5F
+    Основний текст: #EAEAEA
+    Додатковий текст: #A1A1A1
+    Кнопки:
+        Звичайне: #3B82F6, 
+        Наведена: #60A5FA, 
+        Неактивна: #6B7280
+    Поле вводу тексту:
+        Звичайне: #42445A 
+        Наведене: #5A6075
+        Неактивне: #6B7280
+    Редактор коду:
+        Помилка: #F87171
+        Правильно: #10B981
+        Типи змінних: #60A5FA
+        Рядки: #A7F3D0
+        Бібліотеки: #F97316
+        Ключові слова: #C084FC
+
+Світла тема
+    Фон: #F4F4F7
+    Фон класів: #DCE2F0, #BBCDE5
+    Основний текст: #222222
+    Додатковий текст: #616161
+    Кнопки:
+        Звичайне: #A1B7E3, 
+        Наведена: #B5C9EB, 
+        Неактивна: #D8E4F6
+    Поле вводу тексту:
+        Звичайне: #D1D5DB
+        Наведене: #A7B3C7
+        Неактивне: #E0E5F0
+    Редактор коду:
+        Помилка – #E63946 (червоний)
+        Правильно – #2ECC71 (зелений)
+        Типи змінних – #007BFF (чистий синій)
+        Рядки – #4CAF50 (салатовий зелений)
+        Бібліотеки – #FFA500 (соковитий оранжевий)
+        Ключові слова – #8A2BE2 (глибокий фіолетовий)
+*/

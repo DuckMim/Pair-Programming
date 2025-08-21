@@ -12,28 +12,30 @@ const ENEMY_PROFILE_SCORE = document.getElementById("enemyScore");
 Start();
 
 async function Start() {
-    let payload = await LoadData();
+    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
+    let roomInfo = roomInfoPost.roomInfo;
 
-    if (payload.roomsCodes.length < 1) window.location.href = "index.html";
+    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
 
-    SetUpProfiles(payload);
+    SetUpProfiles(allPlayers.players, roomInfo);
 }
 
-function SetUpProfiles(payload) {
-    let playerScore = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].score;
-    let enemyScore = payload.rooms[ROOM_CODE].players[THIS_ENEMY_INDEX].score;
-    let maxPosibleScore = payload.rooms[ROOM_CODE].maxCountOfTasks * 100;
+function SetUpProfiles(allPlayers, roomInfo) {
+    let playerScore = allPlayers[THIS_PLAYER_INDEX].score;
+    let enemyScore = allPlayers[THIS_ENEMY_INDEX].score;
+    let maxPossibleScore = roomInfo.maxTasks * 100;
 
-    let playerName = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].name;
-    let enemyName = payload.rooms[ROOM_CODE].players[THIS_ENEMY_INDEX].name;
-    let playerIcon = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].skin;
-    let enemyIcon = payload.rooms[ROOM_CODE].players[THIS_ENEMY_INDEX].skin;
+    let playerName = allPlayers[THIS_PLAYER_INDEX].name;
+    let enemyName = allPlayers[THIS_ENEMY_INDEX].name;
+    let playerIcon = allPlayers[THIS_PLAYER_INDEX].icon;
+    let enemyIcon = allPlayers[THIS_ENEMY_INDEX].icon;
 
-    PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPosibleScore}`;
-    ENEMY_PROFILE_SCORE.innerHTML = `${enemyScore}/${maxPosibleScore}`;
+    PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPossibleScore}`;
+    ENEMY_PROFILE_SCORE.innerHTML = `${enemyScore}/${maxPossibleScore}`;
 
-    PLAYER_PROFILE_ICON.src = `./Icons/icon_${playerIcon}.png`;
+    PLAYER_PROFILE_ICON.src = ICONS_LIST[playerIcon];
     PLAYER_PROFILE_NAME.innerHTML = playerName + " (Ти)";
-    ENEMY_PROFILE_ICON.src = `./Icons/icon_${enemyIcon}.png`;
+    ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyIcon];
     ENEMY_PROFILE_NAME.innerHTML = enemyName;
 }

@@ -1,5 +1,6 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
 const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
+const THIS_PLAYER_ENEMY_INDEX = sessionStorage.getItem("enemyIndex");
 const GRADE_NUM = sessionStorage.getItem("gradeNum");
 const SET_OF_TASKS = sessionStorage.getItem("setOfTasks");
 
@@ -7,6 +8,8 @@ const PLAYER_PROFILE_ICON = document.getElementById("playerIcon");
 const PLAYER_PROFILE_NAME = document.getElementById("playerName");
 const ENEMY_PROFILE_ICON = document.getElementById("enemyIcon");
 const ENEMY_PROFILE_NAME = document.getElementById("enemyName");
+const PLAYER_PROFILE_GEARS = document.getElementById("playerGears");
+const ENEMY_PROFILE_GEARS = document.getElementById("enemyGears");
 
 const DIV_LIST_OF_CARDS = document.getElementById("cardsList");
 const ENEMY_SPAN_LIST_OF_TASKS = document.getElementById("enemy_taskLetters");
@@ -19,23 +22,25 @@ var listOfEnemyLetter = [];
 var cardMade = false;
 var cardIsOpen = false;
 
+SetUpProfiles();
 Loop();
 
+async function SetUpProfiles() {
+    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
 
-async function SetUpProfiles(payload) {
-    let playerProfile = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX];
-    let enemyProfile = payload.rooms[ROOM_CODE].players[playerProfile.enemy];
+    let playerProfile = allPlayers.players[THIS_PLAYER_INDEX];
+    let enemyProfile = allPlayers.players[THIS_PLAYER_ENEMY_INDEX];
 
-    PLAYER_PROFILE_ICON.src = `./Icons/icon_${playerProfile.skin}.png`;
+    PLAYER_PROFILE_ICON.src = ICONS_LIST[playerProfile.icon];
     PLAYER_PROFILE_NAME.innerHTML = playerProfile.name + " (Ти)";
-    ENEMY_PROFILE_ICON.src = `./Icons/icon_${enemyProfile.skin}.png`;
+    ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyProfile.icon];
     ENEMY_PROFILE_NAME.innerHTML = enemyProfile.name;
 }
 
 async function Loop() {
     while (true) {
         await SomeAsyncFunction();
-        await Delay(75);
+        await Delay(100);
     }
 }
 
@@ -44,51 +49,60 @@ function Delay(ms) {
 }
 
 async function SomeAsyncFunction() {
-    let payload = await LoadData();
+    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
-    if (payload.roomsCodes.length < 1) window.location.href = "index.html";
+    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
+    if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
+    if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
-    let myTasks = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].tasks;
-    let enemyTasks = payload.rooms[ROOM_CODE].players[payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].enemy].tasks;
+    let myTasks = allPlayers.players[THIS_PLAYER_INDEX].tasks;
+    let enemyTasks = allPlayers.players[THIS_PLAYER_ENEMY_INDEX].tasks;
+    let roomInfo = roomInfoPost.roomInfo;
+    let playerOrder = allPlayers.players[THIS_PLAYER_INDEX].isOrder;
 
-    if (myTasks.length == payload.rooms[ROOM_CODE].maxCountOfTasks && enemyTasks.length == payload.rooms[ROOM_CODE].maxCountOfTasks) {
-        await sessionStorage.setItem("gradeNum", payload.rooms[ROOM_CODE].grade);
-        await sessionStorage.setItem("setOfTasks", payload.rooms[ROOM_CODE].numberOfTasksSet);
-        await sessionStorage.setItem("playerIndex", THIS_PLAYER_INDEX);
-        await sessionStorage.setItem("enemyIndex", payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].enemy);
+    if (playerOrder) {
+        PLAYER_PROFILE_GEARS.style.display = "block";
+        ENEMY_PROFILE_GEARS.style.display = "none";
+    } else {
+        PLAYER_PROFILE_GEARS.style.display = "none";
+        ENEMY_PROFILE_GEARS.style.display = "block";
+    }
 
+    if (myTasks.length == roomInfo.maxTasks && enemyTasks.length == roomInfo.maxTasks) {
         window.location.href = "programmingPage.html";
     }
 
-    for (let myCurrentTaskIndex = 0; myCurrentTaskIndex < myTasks.length; myCurrentTaskIndex++) {
-        let myCurrentTask = myTasks[myCurrentTaskIndex];
-        for (let currentTaskIndex = 0; currentTaskIndex < listOfCardsLetter.length; currentTaskIndex++) {
-            if (myCurrentTask == listOfCardsLetter[currentTaskIndex].id) {
-                listOfCardsLetter[currentTaskIndex].remove();
-                listOfCardsLetter.splice(currentTaskIndex, currentTaskIndex);
+    if (allPlayers.players[THIS_PLAYER_INDEX].cardGive) {
+        let myCurrentTask = myTasks[myTasks.length-1];
 
-                if (!listOfPlayerLetter.includes(myCurrentTask)) {
-                    let playerTaskLatter = document.createElement("span");
-                    playerTaskLatter.innerHTML = myCurrentTask;
-                    PLAYER_SPAN_LIST_OF_TASKS.appendChild(playerTaskLatter);
-                    listOfPlayerLetter.push(myCurrentTask);
-                }
+        let cards = DIV_LIST_OF_CARDS.children;
 
+        for (let currentCard of cards) {
+            if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="3"> Задача ${myCurrentTask} </font>`) {
+                currentCard.remove();
                 break;
             }
         }
+
+        let playerTaskLatter = document.createElement("span");
+        playerTaskLatter.innerHTML = myCurrentTask;
+        PLAYER_SPAN_LIST_OF_TASKS.appendChild(playerTaskLatter);
+        listOfPlayerLetter.push(myCurrentTask);
+
+        let res = await SendPost("RoomManager", "ReceiveTask", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX) });
+    
+        if (res.status != 200) return PopUpWindow(res.description);
     }
 
-    console.log(listOfPlayerLetter.length + " " + myTasks.length);
-
-
     if (!cardMade) {
-        SetUpProfiles(payload);
+        let tasksInformation = await SendPost("CPPCompiler", "GetTasks", {taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS});
+        let letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'];
+        
+        if (tasksInformation.status != 200) return PopUpWindow(tasksInformation.description);
 
         for (let i = 0; i < 16; i++) {
-            let taskChar = String.fromCharCode('A'.charCodeAt(0) + i);
-            let res = await FetchTask(GRADE_NUM, SET_OF_TASKS, taskChar);
-            CreateCardWithTask(res, taskChar);
+            CreateCardWithTask(tasksInformation.tasks[i], letter[i]);
         }
         cardMade = !cardMade;
     }
@@ -96,7 +110,7 @@ async function SomeAsyncFunction() {
 
 function CreateCardWithTask(task, taskPeriod) {
     let taskCard = document.createElement("div");
-    taskCard.setAttribute('class', 'chooseTasks_cardOfTask');
+    taskCard.setAttribute('class', 'classField_1 chooseTasks_cardOfTask');
     taskCard.id = taskPeriod;
 
     let selectButton = document.createElement("button");
@@ -105,48 +119,22 @@ function CreateCardWithTask(task, taskPeriod) {
     let taskName = document.createElement("p");
 
     taskLetter.innerHTML = `<font size="3"> Задача ${taskPeriod} </font>`;
+    taskLetter.id = 'taskLetter';
     taskName.innerHTML = `<font size="4"> ${task.name} </font>`;
 
     selectButton.innerHTML = "✓";
-    selectButton.setAttribute('class', 'chooseTasks_cardOfTask_button_select');
     selectButton.onclick = async function () {
-        let payload = await LoadData();
+        let res = await SendPost("RoomManager", "GiveTaskToPlayer", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_ENEMY_INDEX), task: taskPeriod });
 
-        const ENEMY_INDEX = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].enemy;
+        if (res.status != 200) return PopUpWindow(res.description);
 
-        let canPlayerChoose = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].canChoose;
-        console.log(canPlayerChoose + " " + THIS_PLAYER_INDEX);
-
-        if (!canPlayerChoose) return;
-
-        let myTasks = payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].tasks;
-
-        if (listOfEnemyLetter.includes(taskPeriod)) return;
-        if (listOfPlayerLetter.includes(taskPeriod)) return;
-
-        for (let myCurrentTaskIndex = 0; myCurrentTaskIndex < myTasks.length; myCurrentTaskIndex++) {
-            let myCurrentTask = myTasks[myCurrentTaskIndex];
-            if (myCurrentTask == taskPeriod) {
-                return;
-            }
-        }
-
-        payload.rooms[ROOM_CODE].players[ENEMY_INDEX].tasks += taskPeriod;
-        listOfEnemyLetter.push(taskPeriod);
+        taskCard.remove();
 
         let enemyTaskLatter = document.createElement("span");
         enemyTaskLatter.innerHTML = taskPeriod;
         ENEMY_SPAN_LIST_OF_TASKS.appendChild(enemyTaskLatter);
-
-        payload.rooms[ROOM_CODE].players[THIS_PLAYER_INDEX].canChoose = !canPlayerChoose;
-        payload.rooms[ROOM_CODE].players[ENEMY_INDEX].canChoose = canPlayerChoose;
-
-        taskCard.remove();
-
-        await SaveData(payload);
     };
     infoButton.innerHTML = "I";
-    infoButton.setAttribute('class', 'chooseTasks_cardOfTask_button_info');
     infoButton.onclick = () => FullTaskField(task, taskPeriod);
 
     taskCard.appendChild(taskLetter);
@@ -163,7 +151,7 @@ function FullTaskField(task, taskPeriod) {
     if (cardIsOpen) return;
 
     let fullTask = document.createElement("div");
-    fullTask.setAttribute('class', 'chooseTasks_fullTask');
+    fullTask.setAttribute('class', 'classField_2 chooseTasks_fullTask');
 
     let closeButton = document.createElement("button");
     let taskLetter = document.createElement("p");
@@ -174,16 +162,11 @@ function FullTaskField(task, taskPeriod) {
     taskName.innerHTML = ` <font size="4"> ${task.name} </font> `;
     taskCondition.innerHTML = ` <font size="3"> ${task.description} </font> `;
 
-    taskLetter.setAttribute('class', 'chooseTasks_fullTask_p_letter');
-    taskName.setAttribute('class', 'chooseTasks_fullTask_p_name');
-    taskCondition.setAttribute('class', 'chooseTasks_fullTask_p_condition');
-
     closeButton.innerHTML = "✕";
     closeButton.onclick = function () {
         fullTask.remove();
         cardIsOpen = false;
     };
-    closeButton.setAttribute('class', 'chooseTasks_fullTask_button_close');
 
     fullTask.appendChild(taskLetter);
     fullTask.appendChild(taskName);
