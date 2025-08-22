@@ -58,7 +58,8 @@ async function SomeAsyncFunction() {
 
     SetTimer(roomInfo);
 
-    WAITING_GEARS.style.display = ((isSendingTask)?"block":"none");
+    isSendingTask = allPlayers.players[THIS_PLAYER_INDEX].sendedTasks;
+    WAITING_GEARS.style.display = ((isSendingTask)?"inline-block":"none");
 
     myTasks = allPlayers.players[THIS_PLAYER_INDEX].tasks;
     enemyTasks = allPlayers.players[THIS_ENEMY_INDEX].tasks;
@@ -196,14 +197,10 @@ async function NewTask(taskChar) {
 async function UploadSolution() {
     if (isSendingTask) return;
 
-    isSendingTask = true;
-
     let currentNewCode = EDITOR.innerText;
     let cleanedCode = CleanCode(currentNewCode);
 
     let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerIndex:parseInt(THIS_PLAYER_INDEX), taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
-
-    isSendingTask = false;
 
     if (res.status != 200) return PopUpWindow(res.description);
 }
