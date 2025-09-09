@@ -125,6 +125,7 @@ async function SetUpUI(tasks) {
         taskButton.addEventListener("click", () => NewTask(currentChar));
 
         resultTextOnTasks.set(currentChar, "0/100");
+        codeOnTasks.set(currentChar, "");
 
         TASK_BUTTONS_FIELD.appendChild(taskButton);
     }
@@ -133,10 +134,12 @@ async function SetUpUI(tasks) {
 async function NewTask(taskChar) {
     const CURRENT_NEW_TASK = (await SendPost("CPPCompiler", "GetTask", { taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS, task:taskChar })).task;
     const CURRENT_TASK_EXAMPLES = CURRENT_NEW_TASK.examples;
+    codeOnTasks[currentTask] = EDITOR.innerText;
 
     currentTask = taskChar;
 
     TASK_FIELD.innerHTML = "";
+    EDITOR.innerText = codeOnTasks[currentTask];
 
     let taskLetterAndName = document.createElement("p");
     let taskLimits = document.createElement("p");
