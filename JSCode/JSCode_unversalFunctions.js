@@ -30,6 +30,15 @@ const ICONS_LIST = [
     "./Icons/DuckIcon.gif"
 ];
 
+const SPECIAL_ICONS_LIST = [
+    "./Icons/DuckIcon.gif",
+    "./Icons/DuckIcon.gif",
+    "./Icons/DuckIcon.gif",
+    "./Icons/anime.png",
+    "./Icons/dani.jpg",
+    "./Icons/Marmot.jpg"
+]
+
 //#region PopUpWindow
 
 function PopUpWindow(errorType, icon = "./Icons/ErrorIcon.png") {
@@ -228,18 +237,33 @@ class Shape {
 
 const shapes = Array.from({length: (width+height)/2/1000*8}, () => new Shape());
 
-function animate() {
-  frameCount++;
+function IsPC() {
+    let ua = navigator.userAgent;
+    let isMobile = /Mobi|Android/i.test(ua);
+    let isTablet = /Tablet|iPad/i.test(ua);
 
-  if (frameCount % interval === 0) {
-    ctx.clearRect(0, 0, width, height);
+    return !(isMobile || isTablet);
+}
+
+function animate() {
+    frameCount++;
+
+    if (IsPC() && frameCount % interval === 0) {
+        ctx.clearRect(0, 0, width, height);
+        shapes.forEach(shape => {
+            shape.update();
+            shape.draw(ctx);
+        });
+    }
+
+    requestAnimationFrame(animate);
+}
+
+ctx.clearRect(0, 0, width, height);
     shapes.forEach(shape => {
         shape.update();
         shape.draw(ctx);
-    });
-}
-    requestAnimationFrame(animate);
-}
+});
 
 animate();
 
@@ -271,28 +295,13 @@ document.getElementById("darkButton").onclick = () => SetTheme("dark");
 // * ---------------- With Server --------------- //
 const API = 'https://servermanager-plto.onrender.com';
 
-async function SendPost(servername, functionName, arguments) {
+async function SendPost(servername, functionName, argument) {
     return (await fetch(`${API}/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             server: servername,
-            arguments: { name: functionName, arguments: arguments }
+            arguments: { name: functionName, arguments: argument }
         })
     })).json();
-}
-
-async function ResetData() {
-    let res = await fetch(`${API}/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            server: "RoomManager",
-            arguments: { name: "ResetData", arguments: {} }
-        })
-    }).json();
-
-    if (res.status != 200) {
-        return PopUpWindow(res.description);
-    }
 }

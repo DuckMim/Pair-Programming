@@ -34,8 +34,17 @@ function SetUpProfiles(allPlayers, roomInfo) {
     PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPossibleScore}`;
     ENEMY_PROFILE_SCORE.innerHTML = `${enemyScore}/${maxPossibleScore}`;
 
-    PLAYER_PROFILE_ICON.src = ICONS_LIST[playerIcon];
+    if (playerIcon >= 0)
+        PLAYER_PROFILE_ICON.src = ICONS_LIST[playerIcon];
+    else
+        PLAYER_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-playerIcon)-1];
+
     PLAYER_PROFILE_NAME.innerHTML = playerName + " (Ти)";
-    ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyIcon];
+
+    if (enemyIcon >= 0)
+        ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyIcon];
+    else
+        ENEMY_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-enemyIcon)-1];
+
     ENEMY_PROFILE_NAME.innerHTML = enemyName;
 }

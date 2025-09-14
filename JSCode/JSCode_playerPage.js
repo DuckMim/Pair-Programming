@@ -3,6 +3,8 @@ const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
 
 const PLAYER_DIV_LIST = document.getElementById("playersGrid");
 const CHOOSE_IMAGE_GRID = document.getElementById("chooseImageGrid");
+const SKIN_CODE_INPUT = document.getElementById("skineCodeInput");
+
 
 var currentRoomPlayers = 0;
 let divToPlayer = [];
@@ -25,7 +27,7 @@ async function SomeAsyncFunction() {
     let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
-    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
+    if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
     if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
     if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
@@ -58,7 +60,12 @@ function UpdatePlayerSkin(payload, playerIndex) {
 
     let imgInsideDiv = playerDiv.querySelector("img");
     let pInsideDiv = playerDiv.querySelector("p");
-    imgInsideDiv.src = ICONS_LIST[playerSkin];
+
+    if (playerSkin >= 0)
+        imgInsideDiv.src = ICONS_LIST[playerSkin];
+    else
+        imgInsideDiv.src = SPECIAL_ICONS_LIST[(-playerSkin)-1];
+
     if (playerIndex == THIS_PLAYER_INDEX)
         pInsideDiv.textContent = playerName + " (Ти)";
     else
@@ -98,5 +105,10 @@ function SkinMenu() {
 
 async function ChooseSkin(skinIndex) {
     let ans = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX), newIcon: parseInt(skinIndex), code: "0000" });
+    if (ans.status != 200) PopUpWindow(ans.description);
+}
+
+async function ChooseSkinCode() {
+    let ans = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX), newIcon: parseInt(0), code: SKIN_CODE_INPUT.value });
     if (ans.status != 200) PopUpWindow(ans.description);
 }

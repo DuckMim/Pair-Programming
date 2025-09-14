@@ -31,9 +31,17 @@ async function SetUpProfiles() {
     let playerProfile = allPlayers.players[THIS_PLAYER_INDEX];
     let enemyProfile = allPlayers.players[THIS_PLAYER_ENEMY_INDEX];
 
-    PLAYER_PROFILE_ICON.src = ICONS_LIST[playerProfile.icon];
+    if (playerProfile.icon >= 0)
+        PLAYER_PROFILE_ICON.src = ICONS_LIST[playerProfile.icon];
+    else
+        PLAYER_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-playerProfile.icon)-1];
+
+    if (enemyProfile.icon >= 0)
+        ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyProfile.icon];
+    else
+        ENEMY_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-enemyProfile.icon)-1];
+
     PLAYER_PROFILE_NAME.innerHTML = playerProfile.name + " (Ти)";
-    ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyProfile.icon];
     ENEMY_PROFILE_NAME.innerHTML = enemyProfile.name;
 }
 
@@ -52,7 +60,7 @@ async function SomeAsyncFunction() {
     let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
-    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
+    if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
     if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
     if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
@@ -74,7 +82,7 @@ async function SomeAsyncFunction() {
     }
 
     if (allPlayers.players[THIS_PLAYER_INDEX].cardGive) {
-        let myCurrentTask = myTasks[myTasks.length-1];
+        let myCurrentTask = myTasks[myTasks.length - 1];
 
         let cards = DIV_LIST_OF_CARDS.children;
 
@@ -91,14 +99,16 @@ async function SomeAsyncFunction() {
         listOfPlayerLetter.push(myCurrentTask);
 
         let res = await SendPost("RoomManager", "ReceiveTask", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX) });
-    
+
         if (res.status != 200) return PopUpWindow(res.description);
+
+        startedTime = new Date();
     }
 
     if (!cardMade) {
-        let tasksInformation = await SendPost("CPPCompiler", "GetTasks", {taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS});
-        let letter = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'];
-        
+        let tasksInformation = await SendPost("CPPCompiler", "GetTasks", { taskGrade: GRADE_NUM, taskSet: SET_OF_TASKS });
+        let letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+
         if (tasksInformation.status != 200) return PopUpWindow(tasksInformation.description);
 
         for (let i = 0; i < 16; i++) {
@@ -133,6 +143,8 @@ function CreateCardWithTask(task, taskPeriod) {
         let enemyTaskLatter = document.createElement("span");
         enemyTaskLatter.innerHTML = taskPeriod;
         ENEMY_SPAN_LIST_OF_TASKS.appendChild(enemyTaskLatter);
+
+        enemyTime = new Date();
     };
     infoButton.innerHTML = "I";
     infoButton.onclick = () => FullTaskField(task, taskPeriod);

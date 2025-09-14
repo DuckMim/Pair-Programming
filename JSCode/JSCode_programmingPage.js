@@ -52,7 +52,7 @@ async function SomeAsyncFunction() {
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
     let roomInfo = roomInfoPost.roomInfo;
 
-    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
+    if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
     if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
     if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
@@ -107,9 +107,18 @@ function SetUpProfiles(allPlayers, roomInfo) {
     let playerIcon = allPlayers.players[THIS_PLAYER_INDEX].icon;
     let enemyIcon = allPlayers.players[THIS_ENEMY_INDEX].icon;
 
-    PLAYER_PROFILE_ICON.src = ICONS_LIST[playerIcon];
+    if (playerIcon >= 0)
+        PLAYER_PROFILE_ICON.src = ICONS_LIST[playerIcon];
+    else
+        PLAYER_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-playerIcon)-1];
+
     PLAYER_PROFILE_NAME.innerHTML = playerName + " (Ти)";
-    ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyIcon];
+
+    if (enemyIcon >= 0)
+        ENEMY_PROFILE_ICON.src = ICONS_LIST[enemyIcon];
+    else
+        ENEMY_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-enemyIcon)-1];
+
     ENEMY_PROFILE_NAME.innerHTML = enemyName;
 
     currentTask = allPlayers.players[THIS_PLAYER_INDEX].tasks[0];
@@ -125,7 +134,7 @@ async function SetUpUI(tasks) {
         taskButton.addEventListener("click", () => NewTask(currentChar));
 
         resultTextOnTasks.set(currentChar, "0/100");
-        codeOnTasks.set(currentChar, "");
+        codeOnTasks.set(currentChar, " ");
 
         TASK_BUTTONS_FIELD.appendChild(taskButton);
     }
