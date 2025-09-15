@@ -142,13 +142,13 @@ async function SetUpUI(tasks) {
 
 async function NewTask(taskChar) {
     const CURRENT_NEW_TASK = (await SendPost("CPPCompiler", "GetTask", { taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS, task:taskChar })).task;
-    const CURRENT_TASK_EXAMPLES = CURRENT_NEW_TASK.examples;
-    codeOnTasks[currentTask] = EDITOR.innerText;
+    const CURRENT_TASK_EXAMPLES = CURRENT_NEW_TASK.examples; 
+    codeOnTasks.set(currentTask, EDITOR.innerText);
 
     currentTask = taskChar;
 
     TASK_FIELD.innerHTML = "";
-    EDITOR.innerText = codeOnTasks[currentTask];
+    EDITOR.innerText = codeOnTasks.get(currentTask);
 
     let taskLetterAndName = document.createElement("p");
     let taskLimits = document.createElement("p");
