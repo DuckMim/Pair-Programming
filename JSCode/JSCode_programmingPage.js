@@ -21,6 +21,8 @@ const ENEMY_PROFILE_SCORE = document.getElementById("enemyScore");
 
 const BOM_CHAR = '\uFEFF';
 
+EDITOR.innerText = "#include <iostream>\nusing namespace std;\n\nint main() {\n}";
+
 let myTasks;
 let enemyTasks;
 
@@ -31,6 +33,7 @@ let isSendingTask = false;
 
 let resultScoresOnTasks = {};
 let resultErrorOnTasks = {};
+let tasksButtons = {};
 let resultTextOnTasks = new Map();
 let codeOnTasks = new Map();
 
@@ -69,6 +72,12 @@ async function SomeAsyncFunction() {
     RESULT_FIELD.innerText = ((resultErrorOnTasks[currentTask] != "") ? resultErrorOnTasks[currentTask] : (resultScoresOnTasks[currentTask] + "/100"));
     resultTextOnTasks[currentTask] = ((resultErrorOnTasks[currentTask] != "") ? resultErrorOnTasks[currentTask] : (resultScoresOnTasks[currentTask] + "/100"));
 
+    for (let taskChar of myTasks) {
+        if (resultScoresOnTasks[taskChar] == 100) {
+            tasksButtons[taskChar].classList.add("programming_doneTask");
+        }
+    }
+
     SetUpProfiles(allPlayers, roomInfo);
 }
 
@@ -77,7 +86,7 @@ function SetTimer(roomInfo) {
     const TIME_FOR_TASKS = roomInfo.maxTime;
     let currentTime = new Date();
     let elapsedMilliseconds = currentTime - START_TIME;
-    
+
     let totalSeconds = TIME_FOR_TASKS*60 - Math.floor(elapsedMilliseconds / 1000);
 
     if (totalSeconds <= 0) window.location.href = "resultPage.html";
@@ -124,7 +133,6 @@ function SetUpProfiles(allPlayers, roomInfo) {
     currentTask = allPlayers.players[THIS_PLAYER_INDEX].tasks[0];
 
     SetUpUI(allPlayers.players[THIS_PLAYER_INDEX].tasks);
-    NewTask(currentTask);
 }
 
 async function SetUpUI(tasks) {
@@ -134,10 +142,13 @@ async function SetUpUI(tasks) {
         taskButton.addEventListener("click", () => NewTask(currentChar));
 
         resultTextOnTasks.set(currentChar, "0/100");
-        codeOnTasks.set(currentChar, " ");
+        codeOnTasks.set(currentChar, "#include <iostream>\nusing namespace std;\n\nint main() {\n}");
+        tasksButtons[currentChar] = taskButton;
 
         TASK_BUTTONS_FIELD.appendChild(taskButton);
     }
+
+    NewTask(tasks[0]);
 }
 
 async function NewTask(taskChar) {
@@ -222,4 +233,3 @@ function CleanCode(rawCode) {
     let normalized = withoutBom.normalize('NFKC');
     return normalized;
 }
-
