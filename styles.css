@@ -266,6 +266,16 @@ button:hover {
     transform: translateX(calc(50vw - 50% - 15px));
 }
 
+.index_spectateRoomList {
+    font-size: 16px;
+    color: var(--color_text_2);
+
+    height: max(15px,30px);
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-padding: 50px;
+}
+
 /*#endregion */
 
 /*#region Admin */
@@ -514,7 +524,7 @@ button:hover {
 
     display: table;
     margin: 0 auto;
-    
+
     text-align: center;
     width: 75%;
     height: min(166px, 100%);
@@ -628,6 +638,10 @@ button:hover {
 
 .programming_timer {
     padding: 30px;
+}
+
+.programming_doneTask {
+    background-color: rgb(var(--color_code_correct));
 }
 
 .programming_editorField {
@@ -769,49 +783,3 @@ button:hover {
     justify-content: center;
     margin: 100px;
 }
-
-/*#endregion */
-
-/* Color palette
-Темна тема
-    Фон: #1E1E2E
-    Фон класів: #2E2E3E, #3A3D5F
-    Основний текст: #EAEAEA
-    Додатковий текст: #A1A1A1
-    Кнопки:
-        Звичайне: #3B82F6, 
-        Наведена: #60A5FA, 
-        Неактивна: #6B7280
-    Поле вводу тексту:
-        Звичайне: #42445A 
-        Наведене: #5A6075
-        Неактивне: #6B7280
-    Редактор коду:
-        Помилка: #F87171
-        Правильно: #10B981
-        Типи змінних: #60A5FA
-        Рядки: #A7F3D0
-        Бібліотеки: #F97316
-        Ключові слова: #C084FC
-
-Світла тема
-    Фон: #F4F4F7
-    Фон класів: #DCE2F0, #BBCDE5
-    Основний текст: #222222
-    Додатковий текст: #616161
-    Кнопки:
-        Звичайне: #A1B7E3, 
-        Наведена: #B5C9EB, 
-        Неактивна: #D8E4F6
-    Поле вводу тексту:
-        Звичайне: #D1D5DB
-        Наведене: #A7B3C7
-        Неактивне: #E0E5F0
-    Редактор коду:
-        Помилка – #E63946 (червоний)
-        Правильно – #2ECC71 (зелений)
-        Типи змінних – #007BFF (чистий синій)
-        Рядки – #4CAF50 (салатовий зелений)
-        Бібліотеки – #FFA500 (соковитий оранжевий)
-        Ключові слова – #8A2BE2 (глибокий фіолетовий)
-*/
