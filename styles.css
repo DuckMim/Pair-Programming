@@ -590,6 +590,7 @@ button:hover {
 
     align-content: center;
     text-align: center;
+    overflow: auto;
 
     padding: 10px;
 
