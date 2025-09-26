@@ -84,7 +84,7 @@ const styles = getComputedStyle(document.documentElement);
 let width, height;
 
 let frameCount = 0;
-const interval = 2;
+const interval = 60;
 
 function resize() {
     width = canvas.width = Math.max(document.body.scrollWidth, window.innerWidth);
@@ -312,3 +312,4 @@ async function SendPost(servername, functionName, argument) {
     })).json();
 
 }
+
