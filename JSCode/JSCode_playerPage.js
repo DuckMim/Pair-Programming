@@ -37,7 +37,6 @@ async function SomeAsyncFunction() {
     {
         await sessionStorage.setItem("gradeNum", roomInfo.grade);
         await sessionStorage.setItem("setOfTasks", roomInfo.taskSet);
-        await sessionStorage.setItem("playerIndex", parseInt(THIS_PLAYER_INDEX));
         await sessionStorage.setItem("enemyIndex", allPlayers.players[THIS_PLAYER_INDEX].enemy);
 
         window.location.href = "chooseTasksPage.html";
@@ -111,4 +110,5 @@ async function ChooseSkin(skinIndex) {
 async function ChooseSkinCode() {
     let ans = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX), newIcon: parseInt(0), code: SKIN_CODE_INPUT.value });
     if (ans.status != 200) PopUpWindow(ans.description);
+
 }
