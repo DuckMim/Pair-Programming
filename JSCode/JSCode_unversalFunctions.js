@@ -280,6 +280,12 @@ function SetTheme(theme) {
         document.getElementById("lightButton").style.display = "block";
         document.getElementById("darkButton").style.display = "none";
     }
+
+    ctx.clearRect(0, 0, width, height);
+    shapes.forEach(shape => {
+        shape.update();
+        shape.draw(ctx);
+    });
 }
 
 const savedTheme = localStorage.getItem("theme");
@@ -304,4 +310,5 @@ async function SendPost(servername, functionName, argument) {
             arguments: { name: functionName, arguments: argument }
         })
     })).json();
+
 }
