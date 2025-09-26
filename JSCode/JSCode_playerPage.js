@@ -33,10 +33,11 @@ async function SomeAsyncFunction() {
 
     let roomInfo = roomInfoPost.roomInfo;
 
-    if (roomInfo.isStartedGame)
+    if (roomInfo.isStartedGame && allPlayers.players[THIS_PLAYER_INDEX].enemy != -1)
     {
         await sessionStorage.setItem("gradeNum", roomInfo.grade);
         await sessionStorage.setItem("setOfTasks", roomInfo.taskSet);
+        await sessionStorage.setItem("playerIndex", parseInt(THIS_PLAYER_INDEX));
         await sessionStorage.setItem("enemyIndex", parseInt(allPlayers.players[THIS_PLAYER_INDEX].enemy));
 
         window.location.href = "chooseTasksPage.html";
@@ -112,5 +113,6 @@ async function ChooseSkinCode() {
     if (ans.status != 200) PopUpWindow(ans.description);
 
 }
+
 
 
