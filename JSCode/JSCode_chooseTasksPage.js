@@ -45,6 +45,20 @@ async function SetUpProfiles() {
 
     PLAYER_PROFILE_NAME.innerHTML = playerProfile.name + " (Ти)";
     ENEMY_PROFILE_NAME.innerHTML = enemyProfile.name;
+
+    listOfPlayerLetter = playerProfile.tasks.split("");
+    listOfEnemyLetter = enemyProfile.tasks.split("");
+
+    for (let playerTask of listOfPlayerLetter) {
+        let playerTaskLatter = document.createElement("span");
+        playerTaskLatter.innerHTML = playerTask;
+        PLAYER_SPAN_LIST_OF_TASKS.appendChild(playerTaskLatter);
+    }
+    for (let playerTask of listOfEnemyLetter) {
+        let playerTaskLatter = document.createElement("span");
+        playerTaskLatter.innerHTML = playerTask;
+        ENEMY_SPAN_LIST_OF_TASKS.appendChild(playerTaskLatter);
+    }
 }
 
 async function Loop() {
@@ -89,7 +103,7 @@ async function SomeAsyncFunction() {
         let cards = DIV_LIST_OF_CARDS.children;
 
         for (let currentCard of cards) {
-            if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="3"> Задача ${myCurrentTask} </font>`) {
+            if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="2"> Задача ${myCurrentTask} </font>`) {
                 currentCard.remove();
                 break;
             }
@@ -114,6 +128,8 @@ async function SomeAsyncFunction() {
         if (tasksInformation.status != 200) return PopUpWindow(tasksInformation.description);
 
         for (let i = 0; i < 16; i++) {
+            if (listOfPlayerLetter.includes(letter[i]) || listOfEnemyLetter.includes(letter[i])) continue;
+            
             CreateCardWithTask(tasksInformation.tasks[i], letter[i]);
         }
         cardMade = !cardMade;
@@ -130,11 +146,14 @@ function CreateCardWithTask(task, taskPeriod) {
     let taskLetter = document.createElement("p");
     let taskName = document.createElement("p");
 
-    taskLetter.innerHTML = `<font size="3"> Задача ${taskPeriod} </font>`;
+    taskName.style.margin = "5px";
+    taskName.style.fontWeight = "bold";
+
+    taskLetter.innerHTML = `<font size="2"> Задача ${taskPeriod} </font>`;
     taskLetter.id = 'taskLetter';
     taskName.innerHTML = `<font size="4"> ${task.name} </font>`;
 
-        selectButton.innerHTML = `<svg style="margin-bottom: -20%;" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    selectButton.innerHTML = `<svg style="margin-bottom: -20%;" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10.2426 16.3137L6 12.071L7.41421 10.6568L10.2426 13.4853L15.8995 7.8284L17.3137 9.24262L10.2426 16.3137Z"fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21Z" fill="currentColor"/> </svg>`;
     selectButton.onclick = async function () {
@@ -197,4 +216,3 @@ function FullTaskField(task, taskPeriod) {
     document.body.appendChild(fullTask);
     cardIsOpen = true;
 }
-
