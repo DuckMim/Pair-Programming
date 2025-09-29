@@ -291,6 +291,8 @@ function SetTheme(theme) {
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
     SetTheme(savedTheme);
+} else {
+    SetTheme("light");
 }
 
 document.getElementById("lightButton").onclick = () => SetTheme("light");
