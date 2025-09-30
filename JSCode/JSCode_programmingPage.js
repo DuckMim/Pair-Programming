@@ -110,6 +110,8 @@ function SetUpProfiles(allPlayers, roomInfo) {
     PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPossibleScore}`;
     ENEMY_PROFILE_SCORE.innerHTML = `${enemyScore}/${maxPossibleScore}`;
 
+        if (playerScore == maxPossibleScore && enemyScore == maxPossibleScore) window.location.href = "resultPage.html";
+
     if (setUpProfiles) return;
     setUpProfiles = true;
 
