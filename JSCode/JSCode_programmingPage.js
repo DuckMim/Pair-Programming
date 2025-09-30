@@ -72,9 +72,11 @@ async function SomeAsyncFunction() {
     RESULT_FIELD.innerText = ((resultErrorOnTasks[currentTask] != "") ? resultErrorOnTasks[currentTask] : (resultScoresOnTasks[currentTask] + "/100"));
     resultTextOnTasks[currentTask] = ((resultErrorOnTasks[currentTask] != "") ? resultErrorOnTasks[currentTask] : (resultScoresOnTasks[currentTask] + "/100"));
 
-    for (let taskChar of myTasks) {
-        if (resultScoresOnTasks[taskChar] == 100) {
-            tasksButtons[taskChar].classList.add("programming_doneTask");
+    if (tasksButtons.length > 0) {
+        for (let taskChar of myTasks) {
+            if (resultScoresOnTasks[taskChar] == 100) {
+                tasksButtons[taskChar].classList.add("programming_doneTask");
+            }
         }
     }
 
