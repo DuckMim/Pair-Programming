@@ -103,7 +103,7 @@ async function SomeAsyncFunction() {
         let cards = DIV_LIST_OF_CARDS.children;
 
         for (let currentCard of cards) {
-            if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="2"> Задача ${myCurrentTask} </font>`) {
+            if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="2"> ${myCurrentTask} </font>`) {
                 currentCard.remove();
                 break;
             }
@@ -149,7 +149,7 @@ function CreateCardWithTask(task, taskPeriod) {
     taskName.style.margin = "5px";
     taskName.style.fontWeight = "bold";
 
-    taskLetter.innerHTML = `<font size="2"> Задача ${taskPeriod} </font>`;
+    taskLetter.innerHTML = `<font size="2"> ${taskPeriod} </font>`;
     taskLetter.id = 'taskLetter';
     taskName.innerHTML = `<font size="4"> ${task.name} </font>`;
 
