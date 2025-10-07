@@ -21,7 +21,7 @@ const ENEMY_PROFILE_SCORE = document.getElementById("enemyScore");
 
 const BOM_CHAR = '\uFEFF';
 
-EDITOR.innerText = "#include <iostream>\nusing namespace std;\n\nint main() {\n}";
+EDITOR.innerText = "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n}";
 
 let myTasks;
 let enemyTasks;
@@ -146,7 +146,7 @@ async function SetUpUI(tasks) {
         taskButton.addEventListener("click", () => NewTask(currentChar));
 
         resultTextOnTasks.set(currentChar, "0/100");
-        codeOnTasks.set(currentChar, "#include <iostream>\nusing namespace std;\n\nint main() {\n}");
+        codeOnTasks.set(currentChar, "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n}");
         tasksButtons[currentChar] = taskButton;
 
         TASK_BUTTONS_FIELD.appendChild(taskButton);
