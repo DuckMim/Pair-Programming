@@ -178,11 +178,11 @@ async function NewTask(taskChar) {
 
     taskLetterAndName.innerHTML = `<font size="4"> Задача ${taskChar}</font> <br> <font size="6"><b>${CURRENT_NEW_TASK.name}</b></font>`;
     taskLimits.innerHTML = `<font size="4"> <em>${CURRENT_NEW_TASK.limits}</em></font>`;
-    taskCondition.innerText = CURRENT_NEW_TASK.description;
+    taskCondition.innerHTML = CURRENT_NEW_TASK.description;
     taskInputExplanation_Title.innerHTML = `<font size="5"><b>Вхідні файли</b></font>`;
-    taskInputExplanation.innerText = CURRENT_NEW_TASK.inputExplanation;
+    taskInputExplanation.innerHTML = CURRENT_NEW_TASK.inputExplanation;
     taskOutputExplanation_Title.innerHTML = `<font size="5"><b>Вихідні файли</b></font>`;
-    taskOutputExplanation.innerText = CURRENT_NEW_TASK.outputExplanation;
+    taskOutputExplanation.innerHTML = CURRENT_NEW_TASK.outputExplanation;
     taskExample_Title.innerHTML = `<font size="5"><b>Приклади</b></font>`;
 
     TASK_FIELD.appendChild(taskLetterAndName);
