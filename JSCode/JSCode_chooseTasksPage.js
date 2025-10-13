@@ -146,7 +146,7 @@ function CreateCardWithTask(task, taskPeriod) {
     let taskLetter = document.createElement("p");
     let taskName = document.createElement("p");
 
-    taskName.style.margin = "5px";
+    taskName.style.margin = "10px";
     taskName.style.fontWeight = "bold";
 
     taskLetter.innerHTML = `<font size="4"> ${taskPeriod} </font>`;
@@ -216,4 +216,5 @@ function FullTaskField(task, taskPeriod) {
     document.body.appendChild(fullTask);
     cardIsOpen = true;
 }
+
 
