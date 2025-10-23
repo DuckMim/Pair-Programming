@@ -278,6 +278,138 @@ button:hover {
 
 /*#endregion */
 
+/*#region Admin */
+
+.admin_organizer {
+    height: calc(100vh - 20px);
+    width: calc(100% - 0px);
+
+    display: grid;
+    grid-template-columns: 2fr 7fr;
+    grid-template-rows: 1fr 7fr;
+    gap: 35px;
+    row-gap: 35px 0px;
+}
+
+.admin_roomSettings {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    border-radius: 0px;
+
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+.admin_listButtons {
+    margin-left: 25px;
+}
+
+.admin_player_roomInfo {
+    position: relative;
+
+    align-self: center;
+    width: calc(100% - 20px - 17.5px - 35px - 10px);
+    height: auto;
+
+    text-align: center;
+    align-content: center;
+}
+
+.admin_player_grid {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+
+    overflow: auto;
+}
+
+.admin_player_playerIcon {
+    width: max(100px, 20%);
+    height: max(150px, 20%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    margin: 5px;
+}
+
+.admin_player_playerIcon_name {
+    word-break: break-all;
+    text-align: center;
+}
+
+.player_organizer {
+    height: calc(100vh - 20px);
+    width: calc(100% - 0px);
+
+    display: grid;
+    grid-template-rows: 1fr 7fr;
+    gap: 35px;
+}
+
+.player_changeSkin {
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.4s, height 0.4s;
+    pointer-events: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-y: auto;
+    width: 25%;
+    top: 0px;
+    left: 15px;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+}
+
+.player_changeSkin.show {
+    opacity: 1;
+    height: 100%;
+    pointer-events: auto;
+}
+
+#gradeList {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s, height 0.4s;
+    pointer-events: none;
+}
+
+#gradeList.show {
+    opacity: 1;
+    height: 180px;
+    pointer-events: auto;
+}
+
+.admin_setList {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s, height 0.4s;
+    pointer-events: none;
+    position: static; /* Важливо! */
+}
+
+.admin_setList.show {
+    opacity: 1;
+    height: 250px;
+    pointer-events: auto;
+    overflow-y: auto;
+    position: relative; /* Важливо! */
+}
+/*#endregion */
+
 /*#region Spectator */
 
 .spectator_organizer {
