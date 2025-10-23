@@ -1,5 +1,4 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
-const GRADE_NUM = sessionStorage.getItem("gradeNum");
 const SET_OF_TASKS = sessionStorage.getItem("setOfTasks");
 const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
 const THIS_ENEMY_INDEX = sessionStorage.getItem("enemyIndex");
@@ -21,7 +20,7 @@ const ENEMY_PROFILE_SCORE = document.getElementById("enemyScore");
 
 const BOM_CHAR = '\uFEFF';
 
-EDITOR.innerText = "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n}";
+EDITOR.innerText = "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n\n}";
 
 let myTasks;
 let enemyTasks;
@@ -88,7 +87,7 @@ function SetTimer(roomInfo) {
     const TIME_FOR_TASKS = roomInfo.maxTime;
     let currentTime = new Date();
     let elapsedMilliseconds = currentTime - START_TIME;
-
+    
     let totalSeconds = TIME_FOR_TASKS*60 - Math.floor(elapsedMilliseconds / 1000);
 
     if (totalSeconds <= 0) window.location.href = "resultPage.html";
@@ -110,7 +109,7 @@ function SetUpProfiles(allPlayers, roomInfo) {
     PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPossibleScore}`;
     ENEMY_PROFILE_SCORE.innerHTML = `${enemyScore}/${maxPossibleScore}`;
 
-        if (playerScore == maxPossibleScore && enemyScore == maxPossibleScore) window.location.href = "resultPage.html";
+    if (playerScore == maxPossibleScore && enemyScore == maxPossibleScore) window.location.href = "resultPage.html";
 
     if (setUpProfiles) return;
     setUpProfiles = true;
@@ -146,7 +145,7 @@ async function SetUpUI(tasks) {
         taskButton.addEventListener("click", () => NewTask(currentChar));
 
         resultTextOnTasks.set(currentChar, "0/100");
-        codeOnTasks.set(currentChar, "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n}");
+        codeOnTasks.set(currentChar, "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n\n}");
         tasksButtons[currentChar] = taskButton;
 
         TASK_BUTTONS_FIELD.appendChild(taskButton);
@@ -156,7 +155,7 @@ async function SetUpUI(tasks) {
 }
 
 async function NewTask(taskChar) {
-    const CURRENT_NEW_TASK = (await SendPost("CPPCompiler", "GetTask", { taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS, task:taskChar })).task;
+    const CURRENT_NEW_TASK = (await SendPost("CPPCompiler", "GetTask", { taskSet: SET_OF_TASKS, task: taskChar })).task;
     const CURRENT_TASK_EXAMPLES = CURRENT_NEW_TASK.examples; 
     codeOnTasks.set(currentTask, EDITOR.innerText);
 
@@ -183,7 +182,7 @@ async function NewTask(taskChar) {
     taskInputExplanation.innerHTML = CURRENT_NEW_TASK.inputExplanation;
     taskOutputExplanation_Title.innerHTML = `<font size="5"><b>Вихідні файли</b></font>`;
     taskOutputExplanation.innerHTML = CURRENT_NEW_TASK.outputExplanation;
-    taskExample_Title.innerHTML = `<font size="5"><b>Приклади</b></font>`;
+    taskExample_Title.innerHTML = `<font size="5"><b>Приклади:</b></font>`;
 
     TASK_FIELD.appendChild(taskLetterAndName);
     TASK_FIELD.appendChild(taskLimits);
@@ -227,7 +226,7 @@ async function UploadSolution() {
     let currentNewCode = EDITOR.innerText;
     let cleanedCode = CleanCode(currentNewCode);
 
-    let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerIndex:parseInt(THIS_PLAYER_INDEX), taskGrade:GRADE_NUM, taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
+    let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerIndex:parseInt(THIS_PLAYER_INDEX), taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
 
     if (res.status != 200) return PopUpWindow(res.description);
 }
@@ -237,3 +236,4 @@ function CleanCode(rawCode) {
     let normalized = withoutBom.normalize('NFKC');
     return normalized;
 }
+

@@ -278,138 +278,6 @@ button:hover {
 
 /*#endregion */
 
-/*#region Admin */
-
-.admin_organizer {
-    height: calc(100vh - 20px);
-    width: calc(100% - 0px);
-
-    display: grid;
-    grid-template-columns: 2fr 7fr;
-    grid-template-rows: 1fr 7fr;
-    gap: 35px;
-    row-gap: 35px 0px;
-}
-
-.admin_roomSettings {
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-
-    border-radius: 0px;
-
-    grid-row-start: 1;
-    grid-row-end: 3;
-}
-
-.admin_listButtons {
-    margin-left: 25px;
-}
-
-.admin_player_roomInfo {
-    position: relative;
-
-    align-self: center;
-    width: calc(100% - 20px - 17.5px - 35px - 10px);
-    height: auto;
-
-    text-align: center;
-    align-content: center;
-}
-
-.admin_player_grid {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
-
-    overflow: auto;
-}
-
-.admin_player_playerIcon {
-    width: max(100px, 20%);
-    height: max(150px, 20%);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-
-    margin: 5px;
-}
-
-.admin_player_playerIcon_name {
-    word-break: break-all;
-    text-align: center;
-}
-
-.player_organizer {
-    height: calc(100vh - 20px);
-    width: calc(100% - 0px);
-
-    display: grid;
-    grid-template-rows: 1fr 7fr;
-    gap: 35px;
-}
-
-.player_changeSkin {
-    opacity: 0;
-    height: 0;
-    transition: opacity 0.4s, height 0.4s;
-    pointer-events: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    overflow-y: auto;
-    width: 25%;
-    top: 0px;
-    left: 15px;
-    position: absolute;
-    align-items: center;
-    justify-content: center;
-}
-
-.player_changeSkin.show {
-    opacity: 1;
-    height: 100%;
-    pointer-events: auto;
-}
-
-#gradeList {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-    transition: opacity 0.4s, height 0.4s;
-    pointer-events: none;
-}
-
-#gradeList.show {
-    opacity: 1;
-    height: 180px;
-    pointer-events: auto;
-}
-
-.admin_setList {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-    transition: opacity 0.4s, height 0.4s;
-    pointer-events: none;
-    position: static; /* Важливо! */
-}
-
-.admin_setList.show {
-    opacity: 1;
-    height: 250px;
-    pointer-events: auto;
-    overflow-y: auto;
-    position: relative; /* Важливо! */
-}
-/*#endregion */
-
 /*#region Spectator */
 
 .spectator_organizer {
@@ -524,7 +392,7 @@ button:hover {
 
     display: table;
     margin: 0 auto;
-
+    
     text-align: center;
     width: 75%;
     height: min(166px, 100%);
@@ -784,3 +652,49 @@ button:hover {
     justify-content: center;
     margin: 100px;
 }
+
+/*#endregion */
+
+/* Color palette
+Темна тема
+    Фон: #1E1E2E
+    Фон класів: #2E2E3E, #3A3D5F
+    Основний текст: #EAEAEA
+    Додатковий текст: #A1A1A1
+    Кнопки:
+        Звичайне: #3B82F6, 
+        Наведена: #60A5FA, 
+        Неактивна: #6B7280
+    Поле вводу тексту:
+        Звичайне: #42445A 
+        Наведене: #5A6075
+        Неактивне: #6B7280
+    Редактор коду:
+        Помилка: #F87171
+        Правильно: #10B981
+        Типи змінних: #60A5FA
+        Рядки: #A7F3D0
+        Бібліотеки: #F97316
+        Ключові слова: #C084FC
+
+Світла тема
+    Фон: #F4F4F7
+    Фон класів: #DCE2F0, #BBCDE5
+    Основний текст: #222222
+    Додатковий текст: #616161
+    Кнопки:
+        Звичайне: #A1B7E3, 
+        Наведена: #B5C9EB, 
+        Неактивна: #D8E4F6
+    Поле вводу тексту:
+        Звичайне: #D1D5DB
+        Наведене: #A7B3C7
+        Неактивне: #E0E5F0
+    Редактор коду:
+        Помилка – #E63946 (червоний)
+        Правильно – #2ECC71 (зелений)
+        Типи змінних – #007BFF (чистий синій)
+        Рядки – #4CAF50 (салатовий зелений)
+        Бібліотеки – #FFA500 (соковитий оранжевий)
+        Ключові слова – #8A2BE2 (глибокий фіолетовий)
+*/

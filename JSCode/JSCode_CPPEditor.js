@@ -1,6 +1,6 @@
 const INPUT_FIELD = document.getElementById('editor');
 
-const LIST_OF_PARE_SYMBOLS = {'{':'}', '[':']', '(':')', '"':'"'};
+const LIST_OF_PARE_SYMBOLS = {'{':'}', '[':']', '(':')', '"':'"', "'":"'"};
 
 INPUT_FIELD.addEventListener('keydown', GetAKey);
 
@@ -18,6 +18,7 @@ function GetAKey(currentKey) {
         let currentSymbol = String.fromCharCode(currentSymbolIndex);
         let nextSymbol = LIST_OF_PARE_SYMBOLS[currentSymbol];
         let currentCursorPos = GetCursorPosition();
+
         InsertTextAtPosition(currentSymbol+nextSymbol, currentCursorPos);
         SetCursorAt(currentCursorPos+1);
         INPUT_FIELD.focus();

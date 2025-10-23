@@ -1,7 +1,6 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
 const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
 const THIS_PLAYER_ENEMY_INDEX = sessionStorage.getItem("enemyIndex");
-const GRADE_NUM = sessionStorage.getItem("gradeNum");
 const SET_OF_TASKS = sessionStorage.getItem("setOfTasks");
 
 const PLAYER_PROFILE_ICON = document.getElementById("playerIcon");
@@ -122,7 +121,7 @@ async function SomeAsyncFunction() {
     }
 
     if (!cardMade) {
-        let tasksInformation = await SendPost("CPPCompiler", "GetTasks", { taskGrade: GRADE_NUM, taskSet: SET_OF_TASKS });
+        let tasksInformation = await SendPost("CPPCompiler", "GetTasks", { taskSet: SET_OF_TASKS });
         let letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
 
         if (tasksInformation.status != 200) return PopUpWindow(tasksInformation.description);
@@ -216,5 +215,3 @@ function FullTaskField(task, taskPeriod) {
     document.body.appendChild(fullTask);
     cardIsOpen = true;
 }
-
-

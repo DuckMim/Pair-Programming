@@ -1,13 +1,3 @@
-const THEME_LIST = {
-    "linar_1": "Лінійні алгоритми 1",
-    "linar_2": "Лінійні алгоритми 2",
-    "linar_3": "Лінійні алгоритми 3",
-    "branching": "Розгалуження",
-    "Cycles_1": "Цикли 1",
-    "Cycles_2": "Цикли 2",
-    "GCD_LCM": "НСД та НСК"
-};
-
 const ICONS_LIST = [
     "./Icons/icon_0.png",
     "./Icons/icon_1.png",
@@ -32,11 +22,12 @@ const ICONS_LIST = [
 
 const SPECIAL_ICONS_LIST = [
     "./Icons/DuckIcon.gif",
-    "./Icons/DuckIcon.gif",
+    "./Icons/HalloweenIcon.png",
     "./Icons/DuckIcon.gif",
     "./Icons/anime.png",
     "./Icons/dani.jpg",
-    "./Icons/Marmot.jpg"
+    "./Icons/Marmot.jpg",
+    "./Icons/Lev.jpg"
 ]
 
 //#region PopUpWindow
@@ -312,6 +303,4 @@ async function SendPost(servername, functionName, argument) {
             arguments: { name: functionName, arguments: argument }
         })
     })).json();
-
 }
-
