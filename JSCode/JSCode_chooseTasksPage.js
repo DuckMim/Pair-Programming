@@ -109,12 +109,12 @@ async function MainLoop() {
 
                 let currentTaskInformation = tasksInformation.tasks[myCurrentTask.charCodeAt(0)-'A'.charCodeAt(0)];
 
-                await sessionStorage.setItem(`Name {myCurrentTask}`, currentTaskInformation.name);
-                await sessionStorage.setItem(`Limits {myCurrentTask}`, currentTaskInformation.limits);
-                await sessionStorage.setItem(`Description {myCurrentTask}`, currentTaskInformation.description);
-                await sessionStorage.setItem(`InputExplanation {myCurrentTask}`, currentTaskInformation.inputExplanation);
-                await sessionStorage.setItem(`OutputExplanation {myCurrentTask}`, currentTaskInformation.outputExplanation);
-                await sessionStorage.setItem(`Examples {myCurrentTask}`, currentTaskInformation.examples);
+                sessionStorage.setItem(`Name ${myCurrentTask}`, currentTaskInformation.name);
+                sessionStorage.setItem(`Limits ${myCurrentTask}`, currentTaskInformation.limits);
+                sessionStorage.setItem(`Description ${myCurrentTask}`, currentTaskInformation.description);
+                sessionStorage.setItem(`InputExplanation ${myCurrentTask}`, currentTaskInformation.inputExplanation);
+                sessionStorage.setItem(`OutputExplanation ${myCurrentTask}`, currentTaskInformation.outputExplanation);
+                sessionStorage.setItem(`Examples ${myCurrentTask}`, JSON.stringify(currentTaskInformation.examples));
                 
                 break;
             }
@@ -227,4 +227,5 @@ function FullTaskField(task, taskPeriod) {
     document.body.appendChild(fullTask);
     cardIsOpen = true;
 }
+
 
