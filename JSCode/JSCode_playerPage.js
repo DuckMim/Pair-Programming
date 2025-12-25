@@ -6,8 +6,9 @@ const CHOOSE_IMAGE_GRID = document.getElementById("chooseImageGrid");
 const SKIN_CODE_INPUT = document.getElementById("skineCodeInput");
 
 
-var currentRoomPlayers = 0;
+var currentRoomPlayers = [];
 let divToPlayer = [];
+let playersIDs;
 
 Loop();
 
@@ -41,12 +42,15 @@ async function MainLoop() {
         window.location.href = "chooseTasksPage.html";
     }
 
-    for (let i = 0; i < divToPlayer.length; i++)
-        UpdatePlayerSkin(allPlayers.players, i);
+    playersIDs = Array.from(roomInfo.players.keys());
 
-    while (allPlayers.players.length > currentRoomPlayers) {
-        NewPlayerIcon(allPlayers.players, currentRoomPlayers);
-        currentRoomPlayers++;
+    for (let currentPlayerID in playersIDs) {
+        if (!currentRoomPlayers.includes(currentPlayerID)) {
+            NewPlayerIcon(allPlayers.players, currentPlayerID);
+            currentRoomPlayers.add(currentPlayerID);
+        }
+
+        UpdatePlayerSkin(allPlayers.players, currentPlayerID);
     }
 }
 
