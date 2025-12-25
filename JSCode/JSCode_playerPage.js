@@ -6,7 +6,7 @@ const CHOOSE_IMAGE_GRID = document.getElementById("chooseImageGrid");
 const SKIN_CODE_INPUT = document.getElementById("skineCodeInput");
 
 
-var currentRoomPlayers = [];
+var currentRoomPlayers = new Set();
 let divToPlayer = [];
 let playersIDs;
 
@@ -45,7 +45,7 @@ async function MainLoop() {
     playersIDs = Object.keys(allPlayers.players);
 
     for (let currentPlayerID of playersIDs) {
-        if (!currentRoomPlayers.includes(currentPlayerID)) {
+        if (!currentRoomPlayers.has(currentPlayerID)) {
             NewPlayerIcon(allPlayers.players, currentPlayerID);
             currentRoomPlayers.add(currentPlayerID);
         }
