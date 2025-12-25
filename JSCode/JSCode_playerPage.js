@@ -44,7 +44,7 @@ async function MainLoop() {
 
     playersIDs = Object.keys(allPlayers.players);
 
-    for (let currentPlayerID in playersIDs) {
+    for (let currentPlayerID of playersIDs) {
         if (!currentRoomPlayers.includes(currentPlayerID)) {
             NewPlayerIcon(allPlayers.players, currentPlayerID);
             currentRoomPlayers.add(currentPlayerID);
