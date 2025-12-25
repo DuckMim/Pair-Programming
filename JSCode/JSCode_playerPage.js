@@ -42,7 +42,7 @@ async function MainLoop() {
         window.location.href = "chooseTasksPage.html";
     }
 
-    playersIDs = Array.from(allPlayers.players.keys());
+    playersIDs = Object.keys(allPlayers.players);
 
     for (let currentPlayerID in playersIDs) {
         if (!currentRoomPlayers.includes(currentPlayerID)) {
