@@ -1,6 +1,8 @@
 const JOIN_ROOM_CODE_INPUT = document.getElementById('joinRoomCodeInput');
 const NICKNAME_INPUT = document.getElementById('nicknameInput');
 
+sessionStorage.clear();
+
 async function JoinRoom() {
     let joinRoomCodeValue = JOIN_ROOM_CODE_INPUT.value;
     let nicknameValue = NICKNAME_INPUT.value;

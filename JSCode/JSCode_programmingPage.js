@@ -40,7 +40,7 @@ Loop();
 
 async function Loop() {
     while (true) {
-        await SomeAsyncFunction();
+        await MainLoop();
         await Delay(125);
     }
 }
@@ -49,7 +49,7 @@ function Delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function SomeAsyncFunction() {
+async function MainLoop() {
     let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
     let roomInfo = roomInfoPost.roomInfo;
@@ -155,8 +155,12 @@ async function SetUpUI(tasks) {
 }
 
 async function NewTask(taskChar) {
-    const CURRENT_NEW_TASK = (await SendPost("CPPCompiler", "GetTask", { taskSet: SET_OF_TASKS, task: taskChar })).task;
-    const CURRENT_TASK_EXAMPLES = CURRENT_NEW_TASK.examples; 
+    const CURRENT_TASK_NAME = sessionStorage.getItem(`Name {taskChar}`);
+    const CURRENT_TASK_LIMITS = sessionStorage.getItem(`Limits {taskChar}`);
+    const CURRENT_TASK_DESCRIPTION = sessionStorage.getItem(`Description {taskChar}`); 
+    const CURRENT_TASK_INPUT_EXPLANATION = sessionStorage.getItem(`InputExplanation {taskChar}`);
+    const CURRENT_TASK_OUTPUT_EXPLANATION = sessionStorage.getItem(`OutputExplanation {taskChar}`);
+    const CURRENT_TASK_EXAMPLES = sessionStorage.getItem(`Examples {taskChar}`);
     codeOnTasks.set(currentTask, EDITOR.innerText);
 
     currentTask = taskChar;
@@ -175,13 +179,13 @@ async function NewTask(taskChar) {
 
     taskLimits.setAttribute('class', 'classField_2 programming_limits');
 
-    taskLetterAndName.innerHTML = `<font size="4"> Задача ${taskChar}</font> <br> <font size="6"><b>${CURRENT_NEW_TASK.name}</b></font>`;
-    taskLimits.innerHTML = `<font size="4"> <em>${CURRENT_NEW_TASK.limits}</em></font>`;
-    taskCondition.innerHTML = CURRENT_NEW_TASK.description;
+    taskLetterAndName.innerHTML = `<font size="4"> Задача ${taskChar}</font> <br> <font size="6"><b>${CURRENT_TASK_NAME}</b></font>`;
+    taskLimits.innerHTML = `<font size="4"> <em>${CURRENT_TASK_LIMITS}</em></font>`;
+    taskCondition.innerHTML = CURRENT_TASK_DESCRIPTION;
     taskInputExplanation_Title.innerHTML = `<font size="5"><b>Вхідні файли</b></font>`;
-    taskInputExplanation.innerHTML = CURRENT_NEW_TASK.inputExplanation;
+    taskInputExplanation.innerHTML = CURRENT_TASK_INPUT_EXPLANATION;
     taskOutputExplanation_Title.innerHTML = `<font size="5"><b>Вихідні файли</b></font>`;
-    taskOutputExplanation.innerHTML = CURRENT_NEW_TASK.outputExplanation;
+    taskOutputExplanation.innerHTML = CURRENT_TASK_OUTPUT_EXPLANATION;
     taskExample_Title.innerHTML = `<font size="5"><b>Приклади:</b></font>`;
 
     TASK_FIELD.appendChild(taskLetterAndName);
@@ -226,7 +230,7 @@ async function UploadSolution() {
     let currentNewCode = EDITOR.innerText;
     let cleanedCode = CleanCode(currentNewCode);
 
-    let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerIndex:parseInt(THIS_PLAYER_INDEX), taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
+    let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerIndex:THIS_PLAYER_INDEX, taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
 
     if (res.status != 200) return PopUpWindow(res.description);
 }

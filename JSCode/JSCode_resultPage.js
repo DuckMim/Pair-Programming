@@ -47,4 +47,6 @@ function SetUpProfiles(allPlayers, roomInfo) {
         ENEMY_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-enemyIcon)-1];
 
     ENEMY_PROFILE_NAME.innerHTML = enemyName;
+
+    sessionStorage.clear();
 }

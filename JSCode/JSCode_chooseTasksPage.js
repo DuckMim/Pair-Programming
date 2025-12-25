@@ -18,6 +18,8 @@ var listOfCardsLetter = [];
 var listOfPlayerLetter = [];
 var listOfEnemyLetter = [];
 
+let tasksInformation;
+
 var cardMade = false;
 var cardIsOpen = false;
 
@@ -62,7 +64,7 @@ async function SetUpProfiles() {
 
 async function Loop() {
     while (true) {
-        await SomeAsyncFunction();
+        await MainLoop();
         await Delay(100);
     }
 }
@@ -71,7 +73,7 @@ function Delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function SomeAsyncFunction() {
+async function MainLoop() {
     let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
@@ -104,6 +106,16 @@ async function SomeAsyncFunction() {
         for (let currentCard of cards) {
             if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="4"> ${myCurrentTask} </font>`) {
                 currentCard.remove();
+
+                let currentTaskInformation = tasksInformation[myCurrentTask.charCodeAt(0)-'A'.charCodeAt(0)];
+
+                await sessionStorage.setItem(`Name {myCurrentTask}`, currentTaskInformation.name);
+                await sessionStorage.setItem(`Limits {myCurrentTask}`, currentTaskInformation.limits);
+                await sessionStorage.setItem(`Description {myCurrentTask}`, currentTaskInformation.description);
+                await sessionStorage.setItem(`InputExplanation {myCurrentTask}`, currentTaskInformation.inputExplanation);
+                await sessionStorage.setItem(`OutputExplanation {myCurrentTask}`, currentTaskInformation.outputExplanation);
+                await sessionStorage.setItem(`Examples {myCurrentTask}`, currentTaskInformation.examples);
+                
                 break;
             }
         }
@@ -113,7 +125,7 @@ async function SomeAsyncFunction() {
         PLAYER_SPAN_LIST_OF_TASKS.appendChild(playerTaskLatter);
         listOfPlayerLetter.push(myCurrentTask);
 
-        let res = await SendPost("RoomManager", "ReceiveTask", { roomCode: ROOM_CODE, playerIndex: parseInt(THIS_PLAYER_INDEX) });
+        let res = await SendPost("RoomManager", "ReceiveTask", { roomCode: ROOM_CODE, playerIndex: THIS_PLAYER_INDEX });
 
         if (res.status != 200) return PopUpWindow(res.description);
 
@@ -121,7 +133,7 @@ async function SomeAsyncFunction() {
     }
 
     if (!cardMade) {
-        let tasksInformation = await SendPost("CPPCompiler", "GetTasks", { taskSet: SET_OF_TASKS });
+        tasksInformation = await SendPost("CPPCompiler", "GetTasks", { taskSet: SET_OF_TASKS });
         let letter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
 
         if (tasksInformation.status != 200) return PopUpWindow(tasksInformation.description);
