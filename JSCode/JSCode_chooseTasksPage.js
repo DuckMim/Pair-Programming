@@ -107,7 +107,7 @@ async function MainLoop() {
             if (currentCard.querySelector('#taskLetter').innerHTML == `<font size="4"> ${myCurrentTask} </font>`) {
                 currentCard.remove();
 
-                let currentTaskInformation = tasksInformation[myCurrentTask.charCodeAt(0)-'A'.charCodeAt(0)];
+                let currentTaskInformation = tasksInformation.tasks[myCurrentTask.charCodeAt(0)-'A'.charCodeAt(0)];
 
                 await sessionStorage.setItem(`Name {myCurrentTask}`, currentTaskInformation.name);
                 await sessionStorage.setItem(`Limits {myCurrentTask}`, currentTaskInformation.limits);
@@ -227,3 +227,4 @@ function FullTaskField(task, taskPeriod) {
     document.body.appendChild(fullTask);
     cardIsOpen = true;
 }
+
