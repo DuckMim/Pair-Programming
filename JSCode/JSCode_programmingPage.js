@@ -160,7 +160,7 @@ async function NewTask(taskChar) {
     const CURRENT_TASK_DESCRIPTION = sessionStorage.getItem(`Description {taskChar}`); 
     const CURRENT_TASK_INPUT_EXPLANATION = sessionStorage.getItem(`InputExplanation {taskChar}`);
     const CURRENT_TASK_OUTPUT_EXPLANATION = sessionStorage.getItem(`OutputExplanation {taskChar}`);
-    const CURRENT_TASK_EXAMPLES = sessionStorage.getItem(`Examples {taskChar}`);
+    const CURRENT_TASK_EXAMPLES = JSON.parse(sessionStorage.getItem(`Examples ${taskChar}`));
     codeOnTasks.set(currentTask, EDITOR.innerText);
 
     currentTask = taskChar;
@@ -240,4 +240,5 @@ function CleanCode(rawCode) {
     let normalized = withoutBom.normalize('NFKC');
     return normalized;
 }
+
 
