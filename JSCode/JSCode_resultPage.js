@@ -1,6 +1,6 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
-const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
-const THIS_ENEMY_INDEX = sessionStorage.getItem("enemyIndex");
+const THIS_PLAYER_ID = sessionStorage.getItem("playerID");
+const THIS_ENEMY_ID = sessionStorage.getItem("enemyID");
 
 const PLAYER_PROFILE_ICON = document.getElementById("playerIcon");
 const PLAYER_PROFILE_NAME = document.getElementById("playerName");
@@ -12,24 +12,24 @@ const ENEMY_PROFILE_SCORE = document.getElementById("enemyScore");
 Start();
 
 async function Start() {
-    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let allPlayersResponse = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
     let roomInfo = roomInfoPost.roomInfo;
 
-    if (allPlayers.status == 404 && allPlayers.description == "No room with this code!") window.location.href = "index.html";
+    if (allPlayersResponse.status == 404 && allPlayersResponse.description == "No room with this code!") window.location.href = "index.html";
 
-    SetUpProfiles(allPlayers.players, roomInfo);
+    SetUpProfiles(allPlayersResponse.players, roomInfo);
 }
 
 function SetUpProfiles(allPlayers, roomInfo) {
-    let playerScore = allPlayers[THIS_PLAYER_INDEX].score;
-    let enemyScore = allPlayers[THIS_ENEMY_INDEX].score;
+    let playerScore = allPlayers[THIS_PLAYER_ID].score;
+    let enemyScore = allPlayers[THIS_ENEMY_ID].score;
     let maxPossibleScore = roomInfo.maxTasks * 100;
 
-    let playerName = allPlayers[THIS_PLAYER_INDEX].name;
-    let enemyName = allPlayers[THIS_ENEMY_INDEX].name;
-    let playerIcon = allPlayers[THIS_PLAYER_INDEX].icon;
-    let enemyIcon = allPlayers[THIS_ENEMY_INDEX].icon;
+    let playerName = allPlayers[THIS_PLAYER_ID].name;
+    let enemyName = allPlayers[THIS_ENEMY_ID].name;
+    let playerIcon = allPlayers[THIS_PLAYER_ID].icon;
+    let enemyIcon = allPlayers[THIS_ENEMY_ID].icon;
 
     PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPossibleScore}`;
     ENEMY_PROFILE_SCORE.innerHTML = `${enemyScore}/${maxPossibleScore}`;
@@ -47,6 +47,4 @@ function SetUpProfiles(allPlayers, roomInfo) {
         ENEMY_PROFILE_ICON.src = SPECIAL_ICONS_LIST[(-enemyIcon)-1];
 
     ENEMY_PROFILE_NAME.innerHTML = enemyName;
-
-    sessionStorage.clear();
 }

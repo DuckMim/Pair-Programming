@@ -15,13 +15,11 @@ async function JoinRoom() {
         if (charCode < 48 || charCode > 57) return PopUpWindow("Incorrect code type (must be 4 numbers)");
     }
 
-    let res = await SendPost("RoomManager", "JoinRoom", {roomCode: joinRoomCodeValue, name: nicknameValue});
+    let roomJoinInfo = await SendPost("RoomManager", "JoinRoom", {roomCode: joinRoomCodeValue, name: nicknameValue});
 
-    if (res.status != 200) return PopUpWindow(res.description);
+    if (roomJoinInfo.status != 200) return PopUpWindow(roomJoinInfo.description);
 
-    await sessionStorage.clear();
-
-    await sessionStorage.setItem("roomCode", joinRoomCodeValue);
-    await sessionStorage.setItem("playerIndex", res.playerIndex);
+    sessionStorage.setItem("roomCode", joinRoomCodeValue);
+    sessionStorage.setItem("playerID", roomJoinInfo.playerID);
     window.location.href = "playerPage.html";
 }

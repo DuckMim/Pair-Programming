@@ -1,5 +1,5 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
-const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
+const THIS_PLAYER_ID = sessionStorage.getItem("playerID");
 
 const PLAYER_DIV_LIST = document.getElementById("playersGrid");
 const CHOOSE_IMAGE_GRID = document.getElementById("chooseImageGrid");
@@ -7,8 +7,8 @@ const SKIN_CODE_INPUT = document.getElementById("skineCodeInput");
 
 
 var currentRoomPlayers = new Set();
-let divToPlayer = [];
-let playersIDs;
+let divToPlayer = {};
+let playersIDs = [];
 
 Loop();
 
@@ -25,74 +25,78 @@ function Delay(ms) {
 }
 
 async function MainLoop() {
-    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let allPlayersResponse = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
     if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
-    if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
+    if (allPlayersResponse.status != 200) PopUpWindow(allPlayersResponse.description);
     if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
     let roomInfo = roomInfoPost.roomInfo;
+    let allPlayers = allPlayersResponse.players;
 
-    if (roomInfo.isStartedGame && allPlayers.players[THIS_PLAYER_INDEX].enemy != -1)
+    if (roomInfo.isStartedGame && allPlayers[THIS_PLAYER_ID].enemy != -1)
     {
-        await sessionStorage.setItem("setOfTasks", roomInfo.taskSet);
-        await sessionStorage.setItem("enemyIndex", allPlayers.players[THIS_PLAYER_INDEX].enemy);
+        sessionStorage.setItem("setOfTasks", roomInfo.taskSet);
+        sessionStorage.setItem("enemyID", allPlayers[THIS_PLAYER_ID].enemy);
 
         window.location.href = "chooseTasksPage.html";
     }
 
-    playersIDs = Object.keys(allPlayers.players);
+    playersIDs = Object.keys(allPlayers);
 
     for (let currentPlayerID of playersIDs) {
         if (!currentRoomPlayers.has(currentPlayerID)) {
-            NewPlayerIcon(allPlayers.players, currentPlayerID);
+            NewPlayerIcon(allPlayers, currentPlayerID);
             currentRoomPlayers.add(currentPlayerID);
         }
 
-        UpdatePlayerSkin(allPlayers.players, currentPlayerID);
+        UpdatePlayerSkin(allPlayers, currentPlayerID);
     }
 }
 
-function UpdatePlayerSkin(payload, playerIndex) {
-    let playerDiv = divToPlayer[playerIndex];
+function UpdatePlayerSkin(allPlayers, playerID) {
+    let playerDiv = divToPlayer[playerID];
 
-    let playerSkin = payload[playerIndex].icon;
-    let playerName = payload[playerIndex].name;
+    let playerIcon = allPlayers[playerID].icon;
+    let playerName = allPlayers[playerID].name;
 
     let imgInsideDiv = playerDiv.querySelector("img");
     let pInsideDiv = playerDiv.querySelector("p");
 
-    if (playerSkin >= 0)
-        imgInsideDiv.src = ICONS_LIST[playerSkin];
+    if (playerIcon >= 0)
+        imgInsideDiv.src = ICONS_LIST[playerIcon];
     else
-        imgInsideDiv.src = SPECIAL_ICONS_LIST[(-playerSkin)-1];
+        imgInsideDiv.src = SPECIAL_ICONS_LIST[(-playerIcon)-1];
 
-    if (playerIndex == THIS_PLAYER_INDEX)
+    if (playerID == THIS_PLAYER_ID)
         pInsideDiv.textContent = playerName + " (Ти)";
     else
         pInsideDiv.textContent = playerName;
 }
 
-function NewPlayerIcon(payload, playerIndex) {
+function NewPlayerIcon(allPlayers, playerID) {
+    let playerIcon = allPlayers[playerID].icon;
+    let playerName = allPlayers[playerID].name;
+
     let playerBox = document.createElement("div");
     playerBox.setAttribute('class', 'classField_1 admin_player_playerIcon');
 
     let playerBoxSkinImage = document.createElement("img");
-    playerBoxSkinImage.src = ICONS_LIST[0];
+    playerBoxSkinImage.src = ICONS_LIST[playerIcon];
     playerBoxSkinImage.setAttribute('class', 'universal_iconImage');
 
     let playerBoxName = document.createElement("p");
-    if (playerIndex == THIS_PLAYER_INDEX)
-        playerBoxName.textContent = payload[playerIndex].name + " (Ти)";
+    if (playerID == THIS_PLAYER_ID)
+        playerBoxName.textContent = playerName + " (Ти)";
     else
-        playerBoxName.textContent = payload[playerIndex].name;
+        playerBoxName.textContent = playerName;
     playerBoxName.setAttribute('class', 'admin_player_playerIcon_name');
 
     playerBox.appendChild(playerBoxSkinImage);
     playerBox.appendChild(playerBoxName);
 
-    divToPlayer[playerIndex] = playerBox;
+    divToPlayer[playerID] = playerBox;
 
     PLAYER_DIV_LIST.appendChild(playerBox);
 }
@@ -106,11 +110,11 @@ function SkinMenu() {
 }
 
 async function ChooseSkin(skinIndex) {
-    let ans = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerIndex: THIS_PLAYER_INDEX, newIcon: parseInt(skinIndex), code: "0000" });
-    if (ans.status != 200) PopUpWindow(ans.description);
+    let changeIconPost = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerID: THIS_PLAYER_ID, newIcon: parseInt(skinIndex), code: "0000" });
+    if (changeIconPost.status != 200) PopUpWindow(changeIconPost.description);
 }
 
 async function ChooseSkinCode() {
-    let ans = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerIndex: THIS_PLAYER_INDEX, newIcon: parseInt(0), code: SKIN_CODE_INPUT.value });
-    if (ans.status != 200) PopUpWindow(ans.description);
+    let changeIconPost = await SendPost("RoomManager", "ChangeIcon", { roomCode: ROOM_CODE, playerID: THIS_PLAYER_ID, newIcon: parseInt(0), code: SKIN_CODE_INPUT.value });
+    if (changeIconPost.status != 200) PopUpWindow(changeIconPost.description);
 }

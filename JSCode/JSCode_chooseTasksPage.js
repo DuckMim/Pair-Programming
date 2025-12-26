@@ -1,6 +1,6 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
-const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
-const THIS_PLAYER_ENEMY_INDEX = sessionStorage.getItem("enemyIndex");
+const THIS_PLAYER_ID = sessionStorage.getItem("playerID");
+const THIS_ENEMY_ID = sessionStorage.getItem("enemyID");
 const SET_OF_TASKS = sessionStorage.getItem("setOfTasks");
 
 const PLAYER_PROFILE_ICON = document.getElementById("playerIcon");
@@ -29,10 +29,11 @@ var cardIsOpen = false;
 })();
 
 async function SetUpProfiles() {
-    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let allPlayersResponses = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let allPlayers = allPlayersResponses.players;
 
-    let playerProfile = allPlayers.players[THIS_PLAYER_INDEX];
-    let enemyProfile = allPlayers.players[THIS_PLAYER_ENEMY_INDEX];
+    let playerProfile = allPlayers[THIS_PLAYER_ID];
+    let enemyProfile = allPlayers[THIS_ENEMY_ID];
 
     if (playerProfile.icon >= 0)
         PLAYER_PROFILE_ICON.src = ICONS_LIST[playerProfile.icon];
@@ -74,17 +75,19 @@ function Delay(ms) {
 }
 
 async function MainLoop() {
-    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let allPlayersResponses = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
 
     if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
-    if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
+    if (allPlayersResponses.status != 200) PopUpWindow(allPlayersResponses.description);
     if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
 
-    let myTasks = allPlayers.players[THIS_PLAYER_INDEX].tasks;
-    let enemyTasks = allPlayers.players[THIS_PLAYER_ENEMY_INDEX].tasks;
+    let allPlayers = allPlayersResponses.players;
+
+    let myTasks = allPlayers[THIS_PLAYER_ID].tasks;
+    let enemyTasks = allPlayers[THIS_ENEMY_ID].tasks;
     let roomInfo = roomInfoPost.roomInfo;
-    let playerOrder = allPlayers.players[THIS_PLAYER_INDEX].isOrder;
+    let playerOrder = allPlayers[THIS_PLAYER_ID].isOrder;
 
     if (playerOrder) {
         PLAYER_PROFILE_GEARS.style.display = "block";
@@ -98,7 +101,7 @@ async function MainLoop() {
         window.location.href = "programmingPage.html";
     }
 
-    if (allPlayers.players[THIS_PLAYER_INDEX].cardGive) {
+    if (allPlayers[THIS_PLAYER_ID].cardGive) {
         let myCurrentTask = myTasks[myTasks.length - 1];
 
         let cards = DIV_LIST_OF_CARDS.children;
@@ -115,7 +118,7 @@ async function MainLoop() {
                 sessionStorage.setItem(`InputExplanation ${myCurrentTask}`, currentTaskInformation.inputExplanation);
                 sessionStorage.setItem(`OutputExplanation ${myCurrentTask}`, currentTaskInformation.outputExplanation);
                 sessionStorage.setItem(`Examples ${myCurrentTask}`, JSON.stringify(currentTaskInformation.examples));
-                
+
                 break;
             }
         }
@@ -125,7 +128,7 @@ async function MainLoop() {
         PLAYER_SPAN_LIST_OF_TASKS.appendChild(playerTaskLatter);
         listOfPlayerLetter.push(myCurrentTask);
 
-        let res = await SendPost("RoomManager", "ReceiveTask", { roomCode: ROOM_CODE, playerIndex: THIS_PLAYER_INDEX });
+        let res = await SendPost("RoomManager", "ReceiveTask", { roomCode: ROOM_CODE, playerID: THIS_PLAYER_ID });
 
         if (res.status != 200) return PopUpWindow(res.description);
 
@@ -168,7 +171,7 @@ function CreateCardWithTask(task, taskPeriod) {
     <path d="M10.2426 16.3137L6 12.071L7.41421 10.6568L10.2426 13.4853L15.8995 7.8284L17.3137 9.24262L10.2426 16.3137Z"fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21Z" fill="currentColor"/> </svg>`;
     selectButton.onclick = async function () {
-        let res = await SendPost("RoomManager", "GiveTaskToPlayer", { roomCode: ROOM_CODE, playerIndex: THIS_PLAYER_ENEMY_INDEX, task: taskPeriod });
+        let res = await SendPost("RoomManager", "GiveTaskToPlayer", { roomCode: ROOM_CODE, playerID: THIS_ENEMY_ID, task: taskPeriod });
 
         if (res.status != 200) return PopUpWindow(res.description);
 
@@ -177,8 +180,6 @@ function CreateCardWithTask(task, taskPeriod) {
         let enemyTaskLatter = document.createElement("span");
         enemyTaskLatter.innerHTML = taskPeriod;
         ENEMY_SPAN_LIST_OF_TASKS.appendChild(enemyTaskLatter);
-
-        enemyTime = new Date();
     };
     infoButton.innerHTML = `<svg style="margin-bottom: -20%;" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M11 10.9794C11 10.4271 11.4477 9.97937 12 9.97937C12.5523 9.97937 13 10.4271 13 10.9794V16.9794C13 17.5317 12.5523 17.9794 12 17.9794C11.4477 17.9794 11 17.5317 11 16.9794V10.9794Z" fill="currentColor"/>
@@ -227,5 +228,3 @@ function FullTaskField(task, taskPeriod) {
     document.body.appendChild(fullTask);
     cardIsOpen = true;
 }
-
-

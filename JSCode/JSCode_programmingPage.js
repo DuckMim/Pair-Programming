@@ -1,7 +1,7 @@
 const ROOM_CODE = sessionStorage.getItem("roomCode");
 const SET_OF_TASKS = sessionStorage.getItem("setOfTasks");
-const THIS_PLAYER_INDEX = sessionStorage.getItem("playerIndex");
-const THIS_ENEMY_INDEX = sessionStorage.getItem("enemyIndex");
+const THIS_PLAYER_ID = sessionStorage.getItem("playerID");
+const THIS_ENEMY_ID = sessionStorage.getItem("enemyID");
 
 const EDITOR = document.getElementById("editor");
 const TASK_FIELD = document.getElementById("tasksField");
@@ -50,23 +50,25 @@ function Delay(ms) {
 }
 
 async function MainLoop() {
-    let allPlayers = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
+    let allPlayersResponse = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
     let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
     let roomInfo = roomInfoPost.roomInfo;
 
     if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
-    if (allPlayers.status != 200) PopUpWindow(allPlayers.description);
+    if (allPlayersResponse.status != 200) PopUpWindow(allPlayersResponse.description);
     if (roomInfoPost.status != 200) PopUpWindow(roomInfoPost.description);
+
+    let allPlayers = allPlayersResponse.players;
 
     SetTimer(roomInfo);
 
-    isSendingTask = allPlayers.players[THIS_PLAYER_INDEX].sendedTasks;
+    isSendingTask = allPlayers[THIS_PLAYER_ID].sendedTasks;
     WAITING_GEARS.style.display = ((isSendingTask)?"inline-block":"none");
 
-    myTasks = allPlayers.players[THIS_PLAYER_INDEX].tasks;
-    enemyTasks = allPlayers.players[THIS_ENEMY_INDEX].tasks;
-    resultScoresOnTasks = allPlayers.players[THIS_PLAYER_INDEX].scoreOnTask;
-    resultErrorOnTasks = allPlayers.players[THIS_PLAYER_INDEX].errorOnTask;
+    myTasks = allPlayers[THIS_PLAYER_ID].tasks;
+    enemyTasks = allPlayers[THIS_ENEMY_ID].tasks;
+    resultScoresOnTasks = allPlayers[THIS_PLAYER_ID].scoreOnTask;
+    resultErrorOnTasks = allPlayers[THIS_PLAYER_ID].errorOnTask;
 
     RESULT_FIELD.innerText = ((resultErrorOnTasks[currentTask] != "") ? resultErrorOnTasks[currentTask] : (resultScoresOnTasks[currentTask] + "/100"));
     resultTextOnTasks[currentTask] = ((resultErrorOnTasks[currentTask] != "") ? resultErrorOnTasks[currentTask] : (resultScoresOnTasks[currentTask] + "/100"));
@@ -102,8 +104,8 @@ function SetTimer(roomInfo) {
 }
 
 function SetUpProfiles(allPlayers, roomInfo) {
-    let playerScore = allPlayers.players[THIS_PLAYER_INDEX].score;
-    let enemyScore = allPlayers.players[THIS_ENEMY_INDEX].score;
+    let playerScore = allPlayers[THIS_PLAYER_ID].score;
+    let enemyScore = allPlayers[THIS_ENEMY_ID].score;
     let maxPossibleScore = roomInfo.maxTasks * 100;
 
     PLAYER_PROFILE_SCORE.innerHTML = `${playerScore}/${maxPossibleScore}`;
@@ -114,10 +116,10 @@ function SetUpProfiles(allPlayers, roomInfo) {
     if (setUpProfiles) return;
     setUpProfiles = true;
 
-    let playerName = allPlayers.players[THIS_PLAYER_INDEX].name;
-    let enemyName = allPlayers.players[THIS_ENEMY_INDEX].name;
-    let playerIcon = allPlayers.players[THIS_PLAYER_INDEX].icon;
-    let enemyIcon = allPlayers.players[THIS_ENEMY_INDEX].icon;
+    let playerName = allPlayers[THIS_PLAYER_ID].name;
+    let enemyName = allPlayers[THIS_ENEMY_ID].name;
+    let playerIcon = allPlayers[THIS_PLAYER_ID].icon;
+    let enemyIcon = allPlayers[THIS_ENEMY_ID].icon;
 
     if (playerIcon >= 0)
         PLAYER_PROFILE_ICON.src = ICONS_LIST[playerIcon];
@@ -133,9 +135,9 @@ function SetUpProfiles(allPlayers, roomInfo) {
 
     ENEMY_PROFILE_NAME.innerHTML = enemyName;
 
-    currentTask = allPlayers.players[THIS_PLAYER_INDEX].tasks[0];
+    currentTask = allPlayers[THIS_PLAYER_ID].tasks[0];
 
-    SetUpUI(allPlayers.players[THIS_PLAYER_INDEX].tasks);
+    SetUpUI(allPlayers[THIS_PLAYER_ID].tasks);
 }
 
 async function SetUpUI(tasks) {
@@ -161,6 +163,7 @@ async function NewTask(taskChar) {
     const CURRENT_TASK_INPUT_EXPLANATION = sessionStorage.getItem(`InputExplanation ${taskChar}`);
     const CURRENT_TASK_OUTPUT_EXPLANATION = sessionStorage.getItem(`OutputExplanation ${taskChar}`);
     const CURRENT_TASK_EXAMPLES = JSON.parse(sessionStorage.getItem(`Examples ${taskChar}`));
+
     codeOnTasks.set(currentTask, EDITOR.innerText);
 
     currentTask = taskChar;
@@ -230,7 +233,7 @@ async function UploadSolution() {
     let currentNewCode = EDITOR.innerText;
     let cleanedCode = CleanCode(currentNewCode);
 
-    let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerIndex:THIS_PLAYER_INDEX, taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
+    let res = await SendPost("CPPCompiler", "SendTask", { roomCode:ROOM_CODE, playerID:THIS_PLAYER_ID, taskSet:SET_OF_TASKS, task:currentTask, code:cleanedCode });
 
     if (res.status != 200) return PopUpWindow(res.description);
 }
@@ -240,6 +243,4 @@ function CleanCode(rawCode) {
     let normalized = withoutBom.normalize('NFKC');
     return normalized;
 }
-
-
 
