@@ -13,7 +13,7 @@ Start();
 
 async function Start() {
     let allPlayersResponse = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
-    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
+    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE, playerID: THIS_PLAYER_ID });
     let roomInfo = roomInfoPost.roomInfo;
 
     if (allPlayersResponse.status == 404 && allPlayersResponse.description == "No room with this code!") window.location.href = "index.html";

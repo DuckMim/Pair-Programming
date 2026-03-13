@@ -76,7 +76,7 @@ function Delay(ms) {
 
 async function MainLoop() {
     let allPlayersResponses = await SendPost("RoomManager", "GetAllPlayers", { roomCode: ROOM_CODE });
-    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE });
+    let roomInfoPost = await SendPost("RoomManager", "GetRoomInfo", { roomCode: ROOM_CODE, playerID: THIS_PLAYER_ID });
 
     if (roomInfoPost.status == 404 && roomInfoPost.description == "No room with this code!") window.location.href = "index.html";
     if (allPlayersResponses.status != 200) PopUpWindow(allPlayersResponses.description);
